@@ -1,31 +1,29 @@
 import React, { Component } from "react";
-import DistrictDataService from "../../services/district";
+import PollingStationDataService from "../../services/polling-station";
 import { Link } from "react-router-dom";
-import Loader from "react-loader-spinner";
 
-export default class District extends Component {
+export default class PollingStation extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.retrieveDistricts = this.retrieveDistricts.bind(this);
+    this.retrievePollingStations = this.retrievePollingStations.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveDistrict = this.setActiveDistrict.bind(this);
-    this.removeAllDistricts = this.removeAllDistricts.bind(this);
+    this.setActivePollingStation = this.setActivePollingStation.bind(this);
+    this.removeAllPollingStations = this.removeAllPollingStations.bind(this);
     this.searchName = this.searchName.bind(this);
-    this.deleteDistrict = this.deleteDistrict.bind(this);
+    this.deletePollingStation = this.deletePollingStation.bind(this);
 
     this.state = {
-      districts: [],
-      currentDistrict: null,
+      pollingStations: [],
+      currentPollingStation: null,
       currentIndex: -1,
-      searchName: "",
-      isLoading: true
+      searchName: ""
     };
   }
 
-  // Load districts when component is rendered.
+  // Load pollingStations when component is rendered.
   componentDidMount() {
-    this.retrieveDistricts();
+    this.retrievePollingStations();
   }
 
   onChangeSearchName(e) {
@@ -36,56 +34,55 @@ export default class District extends Component {
     });
   }
 
-  retrieveDistricts() {
-    DistrictDataService.getAll()
+  retrievePollingStations() {
+    PollingStationDataService.getAll()
       .then(response => {
         this.setState({
-          districts: response.data,
-          isLoading: false
+          pollingStations: response.data
         });
       }).catch(e => { console.log(e) });
   }
 
   refreshList() {
-    this.retrieveDistricts();
+    this.retrievePollingStations();
     this.setState({
-      currentDistrict: null,
+      currentPollingStation: null,
       currentIndex: -1
     });
   }
 
-  setActiveDistrict(district, index) {
+  setActivePollingStation(pollingStation, index) {
     this.setState({
-      currentDistrict: district,
+      currentPollingStation: pollingStation,
       currentIndex: index
     });
   }
 
-  deleteDistrict() {
-    DistrictDataService.delete(this.state.currentDistrict._id)
+  deletePollingStation() {
+    PollingStationDataService.delete(this.state.currentPollingStation._id)
       .then(() => {
         this.refreshList();
       }).catch(error => { console.log(error) });
   }
 
-  removeAllDistricts() {
-    DistrictDataService.deleteAll()
+  removeAllPollingStations() {
+    PollingStationDataService.deleteAll()
       .then(() => {
         this.refreshList();
       }).catch(e => { console.log(e) });
   }
 
   searchName() {
-    DistrictDataService.findByName(this.state.searchName)
+    PollingStationDataService.findByName(this.state.searchName)
       .then(response => {
         this.setState({
-          districts: response.data
+          pollingStations: response.data
         });
       }).catch(e => { console.log(e) });
   }
 
   render() {
-    const { searchName, districts, currentDistrict, currentIndex } = this.state;
+    const { searchName, pollingStations, currentPollingStation, currentIndex } = this.state;
 
     return (
       <div className="container list row">
@@ -110,79 +107,74 @@ export default class District extends Component {
           </div>
         </div>
         <div className="col-md-6">
-          <h4>District List</h4>
+          <h4>Polling Station List</h4>
           <Link
-            to={"/add-district/"}
-            title={"Add District"}
-            aria-label={"Add District"}
+            to={"/add-polling-station/"}
+            title={"Add Polling Station"}
+            aria-label={"Add Polling Station"}
             className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add District</span>
+          ><span className={"mr-3"}>Add Polling Station</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
-          <button
-            className="mb-2 btn btn-danger"
-            onClick={this.removeAllDistricts}
-          >
-            Remove All
-          </button>
           <ul className="list-group">
-            <Loader
-              type={"MutatingDots"}
-              color={"Yellow"}
-              secondaryColor={"Red"}
-              visible={this.state.isLoading}
-            />
-            { districts && districts.map((district, index) => (
+            { pollingStations && pollingStations.map((pollingStation, index) => (
               <li
                 className={
                   "list-group-item " +
                   (index === currentIndex ? "active" : "")
                 }
-                onClick={() => this.setActiveDistrict(district, index)}
+                onClick={() => this.setActivePollingStation(pollingStation, index)}
                 key={index}
               >
-                {district.name}
+                {pollingStation.name}
               </li>
             ))}
           </ul>
+
+          <button
+            className="m-3 btn btn-sm btn-danger"
+            onClick={this.removeAllPollingStations}
+          >
+            Remove All
+          </button>
         </div>
         <div className="col-md-6">
-          { currentDistrict ? (
+          { currentPollingStation ? (
             <div>
-              <h4>District Details</h4>
+              <h4>Polling Station Details</h4>
               <div>
                 <label>
                   <strong>Code:</strong>
                 </label>{" "}
-                { currentDistrict.code }
+                { currentPollingStation.code }
               </div>
               <div>
                 <label>
                   <strong>Name:</strong>
                 </label>{" "}
-                { currentDistrict.name }
+                { currentPollingStation.name }
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>District:</strong>
                 </label>{" "}
-                { currentDistrict.description }
+                { currentPollingStation.district.name }
               </div>
-              <Link to={"/districts/" + currentDistrict._id} className="btn btn-success mr-2">
+              <Link to={"/polling-stations/" + currentPollingStation._id} className="btn btn-success mr-2">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteDistrict}>
+              <button className="btn btn-danger mr-2" onClick={this.deletePollingStation}>
                 Delete
               </button>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a District...</p>
+              <p>Please click on a Polling station...</p>
             </div>
           )}
         </div>

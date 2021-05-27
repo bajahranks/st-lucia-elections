@@ -1,31 +1,30 @@
 import React, { Component } from "react";
-import DistrictDataService from "../../services/district";
+import CandidateDataService from "../../services/candidate";
 import { Link } from "react-router-dom";
-import Loader from "react-loader-spinner";
 
-export default class District extends Component {
+export default class Candidate extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.retrieveDistricts = this.retrieveDistricts.bind(this);
+    this.retrieveCandidates = this.retrieveCandidates.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveDistrict = this.setActiveDistrict.bind(this);
-    this.removeAllDistricts = this.removeAllDistricts.bind(this);
+    this.setActiveCandidate = this.setActiveCandidate.bind(this);
+    this.removeAllCandidates = this.removeAllCandidates.bind(this);
     this.searchName = this.searchName.bind(this);
-    this.deleteDistrict = this.deleteDistrict.bind(this);
+    this.deleteCandidate = this.deleteCandidate.bind(this);
+    this.formatDate = this.formatDate.bind(this);
 
     this.state = {
-      districts: [],
-      currentDistrict: null,
+      candidates: [],
+      currentCandidate: null,
       currentIndex: -1,
-      searchName: "",
-      isLoading: true
+      searchName: ""
     };
   }
 
-  // Load districts when component is rendered.
+  // Load candidates when component is rendered.
   componentDidMount() {
-    this.retrieveDistricts();
+    this.retrieveCandidates();
   }
 
   onChangeSearchName(e) {
@@ -36,56 +35,61 @@ export default class District extends Component {
     });
   }
 
-  retrieveDistricts() {
-    DistrictDataService.getAll()
+  retrieveCandidates() {
+    CandidateDataService.getAll()
       .then(response => {
         this.setState({
-          districts: response.data,
-          isLoading: false
+          candidates: response.data
         });
       }).catch(e => { console.log(e) });
   }
 
   refreshList() {
-    this.retrieveDistricts();
+    this.retrieveCandidates();
     this.setState({
-      currentDistrict: null,
+      currentCandidate: null,
       currentIndex: -1
     });
   }
 
-  setActiveDistrict(district, index) {
+  setActiveCandidate(candidate, index) {
     this.setState({
-      currentDistrict: district,
+      currentCandidate: candidate,
       currentIndex: index
     });
   }
 
-  deleteDistrict() {
-    DistrictDataService.delete(this.state.currentDistrict._id)
+  deleteCandidate() {
+    CandidateDataService.delete(this.state.currentCandidate._id)
       .then(() => {
         this.refreshList();
       }).catch(error => { console.log(error) });
   }
 
-  removeAllDistricts() {
-    DistrictDataService.deleteAll()
+  removeAllCandidates() {
+    CandidateDataService.deleteAll()
       .then(() => {
         this.refreshList();
       }).catch(e => { console.log(e) });
   }
 
   searchName() {
-    DistrictDataService.findByName(this.state.searchName)
+    CandidateDataService.findByName(this.state.searchName)
       .then(response => {
         this.setState({
-          districts: response.data
+          candidates: response.data
         });
       }).catch(e => { console.log(e) });
   }
 
+  formatDate(date) {
+    const formattedDate = new Date(date).toLocaleDateString();
+
+    return (formattedDate);
+  }
+
   render() {
-    const { searchName, districts, currentDistrict, currentIndex } = this.state;
+    const { searchName, candidates, currentCandidate, currentIndex } = this.state;
 
     return (
       <div className="container list row">
@@ -110,79 +114,92 @@ export default class District extends Component {
           </div>
         </div>
         <div className="col-md-6">
-          <h4>District List</h4>
+          <h4>Candidate List</h4>
           <Link
-            to={"/add-district/"}
-            title={"Add District"}
-            aria-label={"Add District"}
+            to={"/add-candidate/"}
+            title={"Add Candidate"}
+            aria-label={"Add Candidate"}
             className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add District</span>
+          ><span className={"mr-3"}>Add Candidate</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
-          <button
-            className="mb-2 btn btn-danger"
-            onClick={this.removeAllDistricts}
-          >
-            Remove All
-          </button>
           <ul className="list-group">
-            <Loader
-              type={"MutatingDots"}
-              color={"Yellow"}
-              secondaryColor={"Red"}
-              visible={this.state.isLoading}
-            />
-            { districts && districts.map((district, index) => (
+            { candidates && candidates.map((candidate, index) => (
               <li
                 className={
                   "list-group-item " +
                   (index === currentIndex ? "active" : "")
                 }
-                onClick={() => this.setActiveDistrict(district, index)}
+                onClick={() => this.setActiveCandidate(candidate, index)}
                 key={index}
               >
-                {district.name}
+                {candidate.name}
               </li>
             ))}
           </ul>
+
+          <button
+            className="m-3 btn btn-sm btn-danger"
+            onClick={this.removeAllCandidates}
+          >
+            Remove All
+          </button>
         </div>
         <div className="col-md-6">
-          { currentDistrict ? (
+          { currentCandidate ? (
             <div>
-              <h4>District Details</h4>
-              <div>
-                <label>
-                  <strong>Code:</strong>
-                </label>{" "}
-                { currentDistrict.code }
-              </div>
+              <h4>Candidate Details</h4>
               <div>
                 <label>
                   <strong>Name:</strong>
                 </label>{" "}
-                { currentDistrict.name }
+                { currentCandidate.name }
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>DOB:</strong>
                 </label>{" "}
-                { currentDistrict.description }
+                { this.formatDate(currentCandidate.dob) }
               </div>
-              <Link to={"/districts/" + currentDistrict._id} className="btn btn-success mr-2">
+              <div>
+                <label>
+                  <strong>Sex:</strong>
+                </label>{" "}
+                { currentCandidate.gender }
+              </div>
+              <div>
+                <label>
+                  <strong>Party:</strong>
+                </label>{" "}
+                { currentCandidate.party.name }
+              </div>
+              <div>
+                <label>
+                  <strong>District:</strong>
+                </label>{" "}
+                { currentCandidate.district.name }
+              </div>
+              <div>
+                <label>
+                  <strong>Comments:</strong>
+                </label>{" "}
+                { currentCandidate.comments }
+              </div>
+              <Link to={"/candidates/" + currentCandidate._id} className="btn btn-success mr-2">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteDistrict}>
+              <button className="btn btn-danger mr-2" onClick={this.deleteCandidate}>
                 Delete
               </button>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a District...</p>
+              <p>Please click on a Candidate...</p>
             </div>
           )}
         </div>

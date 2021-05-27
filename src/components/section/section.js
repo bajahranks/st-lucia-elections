@@ -1,31 +1,30 @@
 import React, { Component } from "react";
-import DistrictDataService from "../../services/district";
+import SectionDataService from "../../services/section";
 import { Link } from "react-router-dom";
-import Loader from "react-loader-spinner";
+import { getToken } from "../../helpers/util";
 
-export default class District extends Component {
+export default class Section extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.retrieveDistricts = this.retrieveDistricts.bind(this);
+    this.retrieveSections = this.retrieveSections.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveDistrict = this.setActiveDistrict.bind(this);
-    this.removeAllDistricts = this.removeAllDistricts.bind(this);
+    this.setActiveSection = this.setActiveSection.bind(this);
+    this.removeAllSections = this.removeAllSections.bind(this);
     this.searchName = this.searchName.bind(this);
-    this.deleteDistrict = this.deleteDistrict.bind(this);
+    this.deleteSection = this.deleteSection.bind(this);
 
     this.state = {
-      districts: [],
-      currentDistrict: null,
+      sections: [],
+      currentSection: null,
       currentIndex: -1,
       searchName: "",
-      isLoading: true
     };
   }
 
-  // Load districts when component is rendered.
+  // Load sections when component is rendered.
   componentDidMount() {
-    this.retrieveDistricts();
+    this.retrieveSections();
   }
 
   onChangeSearchName(e) {
@@ -36,56 +35,55 @@ export default class District extends Component {
     });
   }
 
-  retrieveDistricts() {
-    DistrictDataService.getAll()
+  retrieveSections() {
+    SectionDataService.getAll(getToken())
       .then(response => {
         this.setState({
-          districts: response.data,
-          isLoading: false
+          sections: response.data.result
         });
       }).catch(e => { console.log(e) });
   }
 
   refreshList() {
-    this.retrieveDistricts();
+    this.retrieveSections();
     this.setState({
-      currentDistrict: null,
+      currentSection: null,
       currentIndex: -1
     });
   }
 
-  setActiveDistrict(district, index) {
+  setActiveSection(section, index) {
     this.setState({
-      currentDistrict: district,
+      currentSection: section,
       currentIndex: index
     });
   }
 
-  deleteDistrict() {
-    DistrictDataService.delete(this.state.currentDistrict._id)
+  deleteSection() {
+    SectionDataService.delete(this.state.currentSection._id)
       .then(() => {
         this.refreshList();
       }).catch(error => { console.log(error) });
   }
 
-  removeAllDistricts() {
-    DistrictDataService.deleteAll()
+  removeAllSections() {
+    SectionDataService.deleteAll()
       .then(() => {
         this.refreshList();
       }).catch(e => { console.log(e) });
   }
 
   searchName() {
-    DistrictDataService.findByName(this.state.searchName)
+    SectionDataService.findByName(this.state.searchName)
       .then(response => {
         this.setState({
-          districts: response.data
+          sections: response.data
         });
       }).catch(e => { console.log(e) });
   }
 
   render() {
-    const { searchName, districts, currentDistrict, currentIndex } = this.state;
+    const { searchName, sections, currentSection, currentIndex } = this.state;
 
     return (
       <div className="container list row">
@@ -110,79 +108,68 @@ export default class District extends Component {
           </div>
         </div>
         <div className="col-md-6">
-          <h4>District List</h4>
+          <h4>Section List</h4>
           <Link
-            to={"/add-district/"}
-            title={"Add District"}
-            aria-label={"Add District"}
+            to={"/add-section/"}
+            title={"Add Section"}
+            aria-label={"Add Section"}
             className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add District</span>
+          ><span className={"mr-3"}>Add Section</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
-          <button
-            className="mb-2 btn btn-danger"
-            onClick={this.removeAllDistricts}
-          >
-            Remove All
-          </button>
           <ul className="list-group">
-            <Loader
-              type={"MutatingDots"}
-              color={"Yellow"}
-              secondaryColor={"Red"}
-              visible={this.state.isLoading}
-            />
-            { districts && districts.map((district, index) => (
+            { sections && sections.map((section, index) => (
               <li
                 className={
                   "list-group-item " +
                   (index === currentIndex ? "active" : "")
                 }
-                onClick={() => this.setActiveDistrict(district, index)}
+                onClick={() => this.setActiveSection(section, index)}
                 key={index}
               >
-                {district.name}
+                {section.name}
               </li>
             ))}
           </ul>
+
+          <button
+            className="m-3 btn btn-sm btn-danger"
+            onClick={this.removeAllSections}
+          >
+            Remove All
+          </button>
         </div>
         <div className="col-md-6">
-          { currentDistrict ? (
+          { currentSection ? (
             <div>
-              <h4>District Details</h4>
-              <div>
-                <label>
-                  <strong>Code:</strong>
-                </label>{" "}
-                { currentDistrict.code }
-              </div>
+              <h4>Section Details</h4>
               <div>
                 <label>
                   <strong>Name:</strong>
                 </label>{" "}
-                { currentDistrict.name }
+                { currentSection.name }
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>Polling Station:</strong>
                 </label>{" "}
-                { currentDistrict.description }
+                { currentSection.pollingStation.name }
               </div>
-              <Link to={"/districts/" + currentDistrict._id} className="btn btn-success mr-2">
+              <Link to={"/sections/" + currentSection._id} className="btn btn-success mr-2">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteDistrict}>
+              <button className="btn btn-danger mr-2" onClick={this.deleteSection}>
                 Delete
               </button>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a District...</p>
+              <p>Please click on a section...</p>
             </div>
           )}
         </div>
