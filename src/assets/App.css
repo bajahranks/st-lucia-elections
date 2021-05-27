@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+/**
+ * My App CSS
+ */
+
+/* Navbar */
+.nav-bg {
+  background-color: #a2d9f2;
+}
