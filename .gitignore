@@ -24,3 +24,11 @@ yarn-debug.log*
 yarn-error.log*
 
 /.idea
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/dbnavigator.xml
+.idea/deployment.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/rcc.xml
+.idea/st-lucia-elections.iml
