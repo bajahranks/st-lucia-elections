@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://nodejs-mongodb-sluelections.herokuapp.com",
   headers: {
     "Content-type": "application/json"
   },
-  withCredentials: true
+  //withCredentials: true
 });

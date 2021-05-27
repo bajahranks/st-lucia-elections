@@ -1,6 +1,5 @@
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import Link from "react-router-dom/Link";
+import { Navbar, Nav } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   return (
@@ -17,9 +16,6 @@ const Navigation = () => {
           </Nav.Item>
           <Nav.Item>
             <Link to={"/candidates"} className="nav-link">Candidates</Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Link to={"/districts"} className="nav-link">Districts</Link>
           </Nav.Item>
           <Nav.Item>
             <Link to={"/districts"} className="nav-link">Districts</Link>
