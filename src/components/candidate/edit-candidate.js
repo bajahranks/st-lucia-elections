@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CandidateDataService from "../../services/candidate";
 import DistrictDataService from "../../services/district";
 import PartyDataService from "../../services/party";
+import Loader from "react-loader-spinner";
 
 export default class EditCandidate extends Component{
   constructor(props) {
@@ -31,7 +32,8 @@ export default class EditCandidate extends Component{
       },
       parties: [],
       districts: [],
-      message: ""
+      message: "",
+      isLoading: true
     };
   }
 
@@ -111,7 +113,8 @@ export default class EditCandidate extends Component{
     PartyDataService.getAll()
       .then(response => {
         this.setState({
-          parties: response.data
+          parties: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -168,6 +171,12 @@ export default class EditCandidate extends Component{
 
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <div className={"card card-body bg-light"}>
           <fieldset>
             <legend>Edit or delete candidate</legend>
@@ -194,7 +203,7 @@ export default class EditCandidate extends Component{
               </div>
             </div>
             {/* DOB Field @todo: Find a datepicker that works with react states or replace with text field. */}
-            <div className={"form-group row"}>
+            {/*<div className={"form-group row"}>
               <label htmlFor={"dob"} className={"col-lg-3 col-form-label"}>DOB</label>
               <div>
                 <input
@@ -206,7 +215,7 @@ export default class EditCandidate extends Component{
                   onChange={this.onChangeDob}
                 />
               </div>
-            </div>
+            </div>*/}
             {/* Gender Field */}
             <div className={"form-group row"}>
               <p className={"col-lg-3"}>Gender</p>
@@ -289,12 +298,12 @@ export default class EditCandidate extends Component{
               </div>
             </div>
             {/* Buttons */}
-            <div className={"form-group row"}>
+            <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.updateCandidate} className="btn btn-success mr-2">
+                <button onClick={this.updateCandidate} className="btn btn-success mr-half">
                   Edit
                 </button>
-                <button className="btn btn-danger mr-2" onClick={this.deleteCandidate}>
+                <button className="btn btn-danger mr-half" onClick={this.deleteCandidate}>
                   Delete
                 </button>
                 <a className={"btn btn-warning"} href={"/"}>Cancel</a>

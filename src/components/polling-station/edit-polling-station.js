@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PollingStationDataService from "../../services/polling-station";
 import DistrictDataService from "../../services/district";
+import Loader from "react-loader-spinner";
 
 export default class EditPollingStation extends Component{
   constructor(props) {
@@ -23,7 +24,8 @@ export default class EditPollingStation extends Component{
         district: ""
       },
       districts: [],
-      message: ""
+      message: "",
+      isLoading: true
     };
   }
 
@@ -80,7 +82,8 @@ export default class EditPollingStation extends Component{
     DistrictDataService.getAll()
       .then(response => {
         this.setState({
-          districts: response.data
+          districts: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -112,6 +115,12 @@ export default class EditPollingStation extends Component{
 
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <div className={"card card-body bg-light"}>
           <fieldset>
             <legend>Edit or delete Polling Station</legend>
@@ -167,12 +176,12 @@ export default class EditPollingStation extends Component{
               </div>
             </div>
             {/* Buttons */}
-            <div className={"form-group row"}>
+            <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.updatePollingStation} className="btn btn-success mr-2">
+                <button onClick={this.updatePollingStation} className="btn btn-success mr-half">
                   Edit
                 </button>
-                <button className="btn btn-danger mr-2" onClick={this.deletePollingStation}>
+                <button className="btn btn-danger mr-half" onClick={this.deletePollingStation}>
                   Delete
                 </button>
                 <a className={"btn btn-warning"} href={"/"}>Cancel</a>

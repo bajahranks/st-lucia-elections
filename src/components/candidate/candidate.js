@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CandidateDataService from "../../services/candidate";
 import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 export default class Candidate extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ export default class Candidate extends Component {
       candidates: [],
       currentCandidate: null,
       currentIndex: -1,
-      searchName: ""
+      searchName: "",
+      isLoading: true
     };
   }
 
@@ -39,7 +41,8 @@ export default class Candidate extends Component {
     CandidateDataService.getAll()
       .then(response => {
         this.setState({
-          candidates: response.data
+          candidates: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -119,15 +122,27 @@ export default class Candidate extends Component {
             to={"/add-candidate/"}
             title={"Add Candidate"}
             aria-label={"Add Candidate"}
-            className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add Candidate</span>
+            className={"btn btn-primary mb-2 mr-half"}
+          ><span className={"mr-half"}>Add Candidate</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
+          <button
+            className="btn btn-danger mb-2 mr-half"
+            onClick={this.removeAllCandidates}
+          >
+            Remove All
+          </button>
           <ul className="list-group">
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
             { candidates && candidates.map((candidate, index) => (
               <li
                 className={
@@ -141,13 +156,6 @@ export default class Candidate extends Component {
               </li>
             ))}
           </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllCandidates}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           { currentCandidate ? (
@@ -189,10 +197,10 @@ export default class Candidate extends Component {
                 </label>{" "}
                 { currentCandidate.comments }
               </div>
-              <Link to={"/candidates/" + currentCandidate._id} className="btn btn-success mr-2">
+              <Link to={"/candidates/" + currentCandidate._id} className="btn btn-success mr-half">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteCandidate}>
+              <button className="btn btn-danger mr-half" onClick={this.deleteCandidate}>
                 Delete
               </button>
             </div>

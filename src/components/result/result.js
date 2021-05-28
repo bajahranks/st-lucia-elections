@@ -17,7 +17,8 @@ export default class Result extends Component {
     this.state = {
       results: [],
       currentResult: null,
-      searchYear: ""
+      searchYear: "",
+      isLoading: true
     };
   }
 
@@ -45,7 +46,8 @@ export default class Result extends Component {
     ResultDataService.getAll()
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -90,13 +92,13 @@ export default class Result extends Component {
     const {results} = this.state;
 
     return (
-      <section className={"ml-3 mr-3"}>
+      <section className={"ml-1 mr-1"}>
         <Link
           to={"/add-result/"}
           title={"Add Result"}
           aria-label={"Add Result"}
           className={"btn btn-primary mb-2"}
-        ><span className={"mr-3"}>Add Result</span>
+        ><span className={"mr-half"}>Add Result</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
@@ -104,6 +106,7 @@ export default class Result extends Component {
             </svg>
         </Link>
         <MaterialTable
+          isLoading={this.state.isLoading}
           title={"St. Lucia Election Data"}
           columns={[
             { field: '_id',  hidden: true },

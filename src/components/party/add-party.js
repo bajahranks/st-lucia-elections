@@ -155,9 +155,9 @@ export default class AddParty extends Component {
               </div>
             </div>
             {/* Buttons */}
-            <div className={"form-group row"}>
+            <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.saveParty} className="btn btn-success mr-1">
+                <button onClick={this.saveParty} className="btn btn-success mr-half">
                   Save
                 </button>
                 <a className={"btn btn-danger"} href={"/"}>Cancel</a>

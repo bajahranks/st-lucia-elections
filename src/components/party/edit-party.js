@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PartyDataService from "../../services/party";
+import Loader from "react-loader-spinner";
 
 export default class EditParty extends Component{
   constructor(props) {
@@ -22,7 +23,8 @@ export default class EditParty extends Component{
         description: "",
         colour: ""
       },
-      message: ""
+      message: "",
+      isLoading: true
     };
   }
 
@@ -78,7 +80,8 @@ export default class EditParty extends Component{
     PartyDataService.get(id)
       .then(response => {
         this.setState({
-          currentParty: response.data
+          currentParty: response.data,
+          isLoading: false
         });
       })
       .catch(error => {
@@ -115,6 +118,12 @@ export default class EditParty extends Component{
 
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <div className={"card card-body bg-light"}>
           <fieldset>
             <legend>Edit or delete party</legend>
@@ -185,12 +194,12 @@ export default class EditParty extends Component{
                 </div>
               </div>
               {/* Buttons */}
-              <div className={"form-group row"}>
+              <div className={"form-group row mt-3"}>
                 <div className={"col-lg-10 col-lg-offset-2"}>
-                  <button onClick={this.updateParty} className="btn btn-success mr-2">
+                  <button onClick={this.updateParty} className="btn btn-success mr-half">
                     Edit
                   </button>
-                  <button className="btn btn-danger mr-2" onClick={this.deleteParty}>
+                  <button className="btn btn-danger mr-half" onClick={this.deleteParty}>
                     Delete
                   </button>
                   <a className={"btn btn-warning"} href={"/"}>Cancel</a>

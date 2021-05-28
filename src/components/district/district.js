@@ -115,8 +115,8 @@ export default class District extends Component {
             to={"/add-district/"}
             title={"Add District"}
             aria-label={"Add District"}
-            className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add District</span>
+            className={"btn btn-primary mb-2 mr-half"}
+          ><span className={"mr-half"}>Add District</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
@@ -172,10 +172,10 @@ export default class District extends Component {
                 </label>{" "}
                 { currentDistrict.description }
               </div>
-              <Link to={"/districts/" + currentDistrict._id} className="btn btn-success mr-2">
+              <Link to={"/districts/" + currentDistrict._id} className="btn btn-success mr-half">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteDistrict}>
+              <button className="btn btn-danger mr-half" onClick={this.deleteDistrict}>
                 Delete
               </button>
             </div>

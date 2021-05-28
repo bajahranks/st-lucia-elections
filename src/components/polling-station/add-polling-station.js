@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PollingStationDataService from "../../services/polling-station";
 import DistrictDataService from "../../services/district";
+import Loader from "react-loader-spinner";
 
 export default class AddPollingStation extends Component {
   constructor(props) {
@@ -22,7 +23,8 @@ export default class AddPollingStation extends Component {
       district: "",
       districts: [],
 
-      submitted: false
+      submitted: false,
+      isLoading: true
     };
   }
 
@@ -53,7 +55,8 @@ export default class AddPollingStation extends Component {
     DistrictDataService.getAll()
       .then(response => {
         this.setState({
-          districts: response.data
+          districts: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -97,6 +100,12 @@ export default class AddPollingStation extends Component {
   render() {
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <div className={"card card-body bg-light"}>
           <fieldset>
             <legend>Add a new polling station</legend>
@@ -148,9 +157,9 @@ export default class AddPollingStation extends Component {
               </div>
             </div>
             {/* Buttons */}
-            <div className={"form-group row"}>
+            <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.savePollingStation} className="btn btn-success mr-1">
+                <button onClick={this.savePollingStation} className="btn btn-success mr-half">
                   Save
                 </button>
                 <a className={"btn btn-danger"} href={"/"}>Cancel</a>

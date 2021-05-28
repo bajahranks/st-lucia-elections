@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PartyDataService from "../../services/party";
 import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 export default class Party extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ export default class Party extends Component {
       parties: [],
       currentParty: null,
       currentIndex: -1,
-      searchName: ""
+      searchName: "",
+      isLoading: true
     };
   }
 
@@ -38,7 +40,8 @@ export default class Party extends Component {
     PartyDataService.getAll()
       .then(response => {
         this.setState({
-          parties: response.data
+          parties: response.data,
+          isLoading: false
         });
       })
       .catch(e => {
@@ -124,17 +127,28 @@ export default class Party extends Component {
             to={"/add-party/"}
             title={"Add Party"}
             aria-label={"Add Party"}
-            className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add Party</span>
+            className={"btn btn-primary mb-2 mr-half"}
+          ><span className={"mr-half"}>Add Party</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
+          <button
+            className="btn btn-danger mb-2"
+            onClick={this.removeAllParties}
+          >
+            Remove All
+          </button>
           <ul className="list-group">
-            {parties &&
-            parties.map((party, index) => (
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
+            {parties && parties.map((party, index) => (
               <li
                 className={
                   "list-group-item " +
@@ -147,13 +161,6 @@ export default class Party extends Component {
               </li>
             ))}
           </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllParties}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           {currentParty ? (
@@ -184,10 +191,10 @@ export default class Party extends Component {
                 </label>{" "}
                 {currentParty.description}
               </div>
-              <Link to={"/parties/" + currentParty._id} className="btn btn-success mr-2">
+              <Link to={"/parties/" + currentParty._id} className="btn btn-success mr-half">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteParty}>
+              <button className="btn btn-danger mr-half" onClick={this.deleteParty}>
                 Delete
               </button>
             </div>

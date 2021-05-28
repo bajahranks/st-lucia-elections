@@ -5,6 +5,7 @@ import DistrictDataService from "../../services/district";
 import CandidateDataService from "../../services/candidate";
 import SectionDataService from "../../services/section";
 import PollingStationDataService from "../../services/polling-station";
+import Loader from "react-loader-spinner";
 
 export default class AddResult extends Component {
   constructor(props) {
@@ -79,7 +80,8 @@ export default class AddResult extends Component {
       sections: [],
       candidates: [],
 
-      submitted: false
+      submitted: false,
+      isLoading: true
     };
   }
 
@@ -288,7 +290,8 @@ export default class AddResult extends Component {
     CandidateDataService.getAll()
       .then(response => {
         this.setState({
-          candidates: response.data
+          candidates: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -382,6 +385,12 @@ export default class AddResult extends Component {
   render() {
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <div className={"card card-body bg-light"}>
           <fieldset>
             <legend>Add a new result</legend>
@@ -770,9 +779,9 @@ export default class AddResult extends Component {
             </div>
             { this.submitted(this.state.submitted, this.state.id) }
             {/* Buttons */}
-            <div className={"form-group row"}>
+            <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.saveResult} className="btn btn-success mr-1">
+                <button onClick={this.saveResult} className="btn btn-success mr-half">
                   Save
                 </button>
                 <a className={"btn btn-danger"} href={"/"}>Cancel</a>

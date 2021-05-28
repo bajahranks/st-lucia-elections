@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SectionDataService from "../../services/section";
 import { Link } from "react-router-dom";
 import { getToken } from "../../helpers/util";
+import Loader from "react-loader-spinner";
 
 export default class Section extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class Section extends Component {
       currentSection: null,
       currentIndex: -1,
       searchName: "",
+      isLoading: true
     };
   }
 
@@ -39,7 +41,8 @@ export default class Section extends Component {
     SectionDataService.getAll(getToken())
       .then(response => {
         this.setState({
-          sections: response.data.result
+          sections: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -113,15 +116,27 @@ export default class Section extends Component {
             to={"/add-section/"}
             title={"Add Section"}
             aria-label={"Add Section"}
-            className={"btn btn-primary mb-2"}
-          ><span className={"mr-3"}>Add Section</span>
+            className={"btn btn-primary mb-2 mr-half"}
+          ><span className={"mr-half"}>Add Section</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
           </Link>
+          <button
+            className="mr-half mb-2 btn btn-danger"
+            onClick={this.removeAllSections}
+          >
+            Remove All
+          </button>
           <ul className="list-group">
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
             { sections && sections.map((section, index) => (
               <li
                 className={
@@ -135,13 +150,6 @@ export default class Section extends Component {
               </li>
             ))}
           </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllSections}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           { currentSection ? (
@@ -159,10 +167,10 @@ export default class Section extends Component {
                 </label>{" "}
                 { currentSection.pollingStation.name }
               </div>
-              <Link to={"/sections/" + currentSection._id} className="btn btn-success mr-2">
+              <Link to={"/sections/" + currentSection._id} className="btn btn-success mr-half">
                 Edit
               </Link>
-              <button className="btn btn-danger mr-2" onClick={this.deleteSection}>
+              <button className="btn btn-danger mr-half" onClick={this.deleteSection}>
                 Delete
               </button>
             </div>
