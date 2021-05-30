@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import Elections from "../../services/elections";
+import Loader from "react-loader-spinner";
+import Table from "react-bootstrap/Table";
 
 export default class Soufriere2016 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -19,7 +22,8 @@ export default class Soufriere2016 extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -32,6 +36,12 @@ export default class Soufriere2016 extends Component {
     return (
       <div>
         <section className={"container"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
           <h2>Soufriere 2016 Results</h2>
           <hr />
           <div className={"row"}>
@@ -39,7 +49,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H1 - Soufriere Primary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -122,7 +132,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'H', 'H1', 'SO-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -131,7 +141,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H2 - Soufriere Infant School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -200,7 +210,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'H', 'H2', 'Q-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -209,7 +219,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H3 - St. Isidore's Hall</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -264,7 +274,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'H', 'H3', 'L-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -273,7 +283,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H4 - Etangs Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -321,7 +331,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'H', 'H4', 'J-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -330,7 +340,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H5 - Bouton Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -371,7 +381,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'H', 'H5', 'A-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -380,7 +390,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H6 - Fond St. Jacques Primary School (A)</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -428,7 +438,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'H', 'H6', 'JO-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -437,7 +447,7 @@ export default class Soufriere2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>H7 - Fond St. Jacques Primary School (B)</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -485,7 +495,7 @@ export default class Soufriere2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'H', 'H7', 'J-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>

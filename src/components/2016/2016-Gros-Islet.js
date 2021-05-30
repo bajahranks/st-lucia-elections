@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import Elections from "../../services/elections";
+import Loader from "react-loader-spinner";
+import Table from "react-bootstrap/Table";
 
 export default class GrosIslet2016 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -19,7 +22,8 @@ export default class GrosIslet2016 extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: true
         });
       }).catch(e => { console.log(e) });
   }
@@ -32,6 +36,12 @@ export default class GrosIslet2016 extends Component {
     return (
       <div>
         <section className={"container"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
           <h2>Castries Central 2016 Results</h2>
           <hr />
           <div className={"row"}>
@@ -39,7 +49,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A1 (a) - Gros Islet Primary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -122,7 +132,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A1 (a)', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -131,7 +141,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A1 (b) - Gros Islet Secondary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -221,7 +231,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'A', 'A1 (b)', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -230,7 +240,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A1 (c) - Johnsons Centre Rodney Bay</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -292,7 +302,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A1 (c)', 'N-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -301,7 +311,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A1 (d) - Johnsons Centre Rodney Bay</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -342,7 +352,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'A', 'A1 (d)', 'A-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -351,7 +361,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A2 (a) - Monchy Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -420,7 +430,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A2 (a)', 'Q-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -429,7 +439,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A2 (b) - Darren Sammy Stadium (Beausejour)</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -498,7 +508,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A2 (b)', 'R-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -507,7 +517,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A3 Grande Riviere Primary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -618,7 +628,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A3', 'T-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -627,7 +637,7 @@ export default class GrosIslet2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>A4 Corinth Secondary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -738,7 +748,7 @@ export default class GrosIslet2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'A', 'A4', 'ST.L-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>

@@ -167,12 +167,12 @@ export default class Candidate extends Component {
                 </label>{" "}
                 { currentCandidate.name }
               </div>
-              <div>
+              {/*<div>
                 <label>
                   <strong>DOB:</strong>
                 </label>{" "}
                 { this.formatDate(currentCandidate.dob) }
-              </div>
+              </div>*/}
               <div>
                 <label>
                   <strong>Sex:</strong>

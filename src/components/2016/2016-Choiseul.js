@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import Elections from "../../services/elections";
+import Loader from "react-loader-spinner";
+import Table from "react-bootstrap/Table";
 
 export default class Choiseul2016 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -19,7 +22,8 @@ export default class Choiseul2016 extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -31,6 +35,12 @@ export default class Choiseul2016 extends Component {
     return (
       <div>
         <section className={"container"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
           <h2>Choiseul 2016 Results</h2>
           <hr />
           <div className={"row"}>
@@ -38,7 +48,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I1 - Delcer Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -92,7 +102,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I1', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -101,7 +111,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I2 - Mongouge Infant School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -149,7 +159,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'I', 'I2', 'M-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -158,7 +168,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I3 - Choiseul Secondary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -212,7 +222,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I3', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -221,7 +231,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I4 - Dacretin Community Centre</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -263,7 +273,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'I', 'I4', 'J-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -272,7 +282,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I5 - Roblot Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -320,7 +330,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I5', 'M-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -329,7 +339,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I6 - Dugard Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -365,7 +375,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I6', 'A-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -374,7 +384,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I7 - Hang Out Bar, Jetrine</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -422,7 +432,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I7', 'N-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -431,7 +441,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I8 - Saltibus Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -479,7 +489,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I8', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -488,7 +498,7 @@ export default class Choiseul2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>I9 - Piaye Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -530,7 +540,7 @@ export default class Choiseul2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'I', 'I9', 'JO-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>

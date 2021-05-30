@@ -94,31 +94,31 @@ div#rect {
 .slp-border {
   border-left-style: solid;
   border-left-color: #dc3545;
-  border-left-width: thick;
+  border-left-width: thick !important;
 }
 
 .uwp-border {
   border-left-style: solid;
   border-left-color: #ffc107;
-  border-left-width: thick;
+  border-left-width: thick !important;
 }
 
 .indep-border {
   border-left-style: solid;
   border-left-color: #5c1673;
-  border-left-width: thick;
+  border-left-width: thick !important;
 }
 
 .lpm-border {
   border-left-style: solid;
   border-left-color: #198754;
-  border-left-width: thick;
+  border-left-width: thick !important;
 }
 
 .lg-border {
   border-left-style: solid;
   border-left-color: #9cff8f;
-  border-left-width: thick;
+  border-left-width: thick !important;
 }
 
 .max-width-max-content {

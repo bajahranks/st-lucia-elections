@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../services/result";
-import {Link} from "react-router-dom";
+import Link from "react-router-dom/Link";
+import Table from "react-bootstrap/Table"
+import Loader from "react-loader-spinner";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -23,7 +26,8 @@ export default class Home extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -79,18 +83,24 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div>
+      <>
+        <Loader
+          type={"MutatingDots"}
+          color={"Yellow"}
+          secondaryColor={"Red"}
+          visible={this.state.isLoading}
+        />
         <section>
           <div className={"text-center font-weight-bold"}>
             <h1>St. Lucia Election Results 2016</h1>
             Seats <span>(9 to win)</span></div>
           <div className={"row"}>
-            <div className={"jumbotron col-sm-12 col-md-6 bg-warning text-black display-4"}>
+            <div className={"h-100 p-5 border rounded-3 col-sm-12 col-md-6 bg-warning text-black display-4"}>
               <div>UWP <span className={"float-inline-end"}>11</span>
                 {this.totalVotes(2)}
               </div>
             </div>
-            <div className={"jumbotron col-sm-12 col-md-6 bg-danger text-white display-4"}>
+            <div className={"h-100 p-5 border rounded-3 col-sm-12 col-md-6 bg-danger text-white display-4"}>
               <div>SLP <span className={"float-inline-end"}>6</span></div>
               {this.totalVotes(1)}
             </div>
@@ -106,7 +116,7 @@ export default class Home extends Component {
                     Anse-La-Raye/Canaries
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -128,7 +138,7 @@ export default class Home extends Component {
                     {this.votes('G', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Babonneau */}
@@ -139,7 +149,7 @@ export default class Home extends Component {
                     Babonneau
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -161,7 +171,7 @@ export default class Home extends Component {
                     {this.votes('B', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Castries Central */}
@@ -172,7 +182,7 @@ export default class Home extends Component {
                     Castries Central
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -199,7 +209,7 @@ export default class Home extends Component {
                     {this.votes('E', 5)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Castries East */}
@@ -210,7 +220,7 @@ export default class Home extends Component {
                     Castries East
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -232,7 +242,7 @@ export default class Home extends Component {
                     {this.votes('D', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Castries North */}
@@ -243,7 +253,7 @@ export default class Home extends Component {
                     Castries North
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -265,7 +275,7 @@ export default class Home extends Component {
                     {this.votes('C', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Castries South */}
@@ -276,7 +286,7 @@ export default class Home extends Component {
                     Castries South
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -298,7 +308,7 @@ export default class Home extends Component {
                     {this.votes('F', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Castries South East */}
@@ -309,7 +319,7 @@ export default class Home extends Component {
                     Castries South East
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -331,7 +341,7 @@ export default class Home extends Component {
                     {this.votes('Q', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Choiseul */}
@@ -342,7 +352,7 @@ export default class Home extends Component {
                     Choiseul
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -364,7 +374,7 @@ export default class Home extends Component {
                     {this.votes('I', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Dennery North */}
@@ -375,7 +385,7 @@ export default class Home extends Component {
                     Dennery North
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -397,7 +407,7 @@ export default class Home extends Component {
                     {this.votes('P', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Dennery South */}
@@ -408,7 +418,7 @@ export default class Home extends Component {
                     Dennery South
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -435,7 +445,7 @@ export default class Home extends Component {
                     {this.votes('O', 5)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Gros Islet */}
@@ -446,7 +456,7 @@ export default class Home extends Component {
                     Gros Islet
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -473,7 +483,7 @@ export default class Home extends Component {
                     {this.votes('A', 3)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Laborie */}
@@ -484,7 +494,7 @@ export default class Home extends Component {
                     Laborie
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -506,7 +516,7 @@ export default class Home extends Component {
                     {this.votes('J', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Micoud North */}
@@ -517,7 +527,7 @@ export default class Home extends Component {
                     Micoud North
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -549,7 +559,7 @@ export default class Home extends Component {
                     {this.votes('N', 6)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Micoud South */}
@@ -560,7 +570,7 @@ export default class Home extends Component {
                     Micoud South
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -582,7 +592,7 @@ export default class Home extends Component {
                     {this.votes('M', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Soufriere */}
@@ -593,7 +603,7 @@ export default class Home extends Component {
                     Soufriere
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -620,7 +630,7 @@ export default class Home extends Component {
                     {this.votes('H', 4)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Vieux-Fort North */}
@@ -631,7 +641,7 @@ export default class Home extends Component {
                     Vieux-Fort North
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -653,7 +663,7 @@ export default class Home extends Component {
                     {this.votes('L', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
             {/* Vieux-Fort South */}
@@ -664,7 +674,7 @@ export default class Home extends Component {
                     Vieux-Fort South
                   </Link>
                 </h3>
-                <table className="table table-sm">
+                <Table className="table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -686,12 +696,12 @@ export default class Home extends Component {
                     {this.votes('K', 2)}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
         </section>
-      </div>
+      </>
     )
   }
 }

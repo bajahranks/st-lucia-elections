@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import Elections from "../../services/elections";
+import Loader from "react-loader-spinner";
+import Table from "react-bootstrap/Table";
 
 export default class CastriesSouth2016 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -19,7 +22,8 @@ export default class CastriesSouth2016 extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -31,6 +35,12 @@ export default class CastriesSouth2016 extends Component {
     return (
       <div>
         <section className={"container"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
           <h2>Castries South 2016 Results</h2>
           <hr />
           <div className={"row"}>
@@ -38,7 +48,7 @@ export default class CastriesSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>F1 - SLASPA Ferry Terminal</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -104,7 +114,7 @@ export default class CastriesSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'F', 'F1', 'R-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -113,7 +123,7 @@ export default class CastriesSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>F2 - Ciceron Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -197,16 +207,16 @@ export default class CastriesSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'F', 'F2', 'T-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
-          <div>
+          <div className={"row"}>
             {/* F3 - La Croix Maingot (Hess School) */}
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>F3 - La Croix Maingot (Hess School)</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -266,7 +276,7 @@ export default class CastriesSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'F', 'F3', 'S-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>

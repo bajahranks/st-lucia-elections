@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import Elections from "../../services/elections";
+import Loader from "react-loader-spinner";
+import Table from "react-bootstrap/Table";
 
 export default class VieuxFortSouth2016 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      results: []
+      results: [],
+      isLoading: true
     };
   }
 
@@ -19,7 +22,8 @@ export default class VieuxFortSouth2016 extends Component {
     ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
-          results: response.data
+          results: response.data,
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -31,6 +35,12 @@ export default class VieuxFortSouth2016 extends Component {
     return (
       <div>
         <section className={"container"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
           <h2>Vieux-Fort South 2016 Results</h2>
           <hr />
           <div className={"row"}>
@@ -38,7 +48,7 @@ export default class VieuxFortSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>K1 - Vieux-Fort Primary School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -104,7 +114,7 @@ export default class VieuxFortSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'K', 'K1', 'R-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -113,7 +123,7 @@ export default class VieuxFortSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>K2 - Vieux-Fort Infant School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -173,7 +183,7 @@ export default class VieuxFortSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'K', 'K2', 'R-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -182,7 +192,7 @@ export default class VieuxFortSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>K3 - Plain View Combined School</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -260,7 +270,7 @@ export default class VieuxFortSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results,'K', 'K3', 'SO-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
@@ -269,7 +279,7 @@ export default class VieuxFortSouth2016 extends Component {
             <div className={"max-width-max-content col-sm-12 col-md-12"}>
               <div className={"district-results"}>
                 <h3 className={"text-center"}>K4 - Vieux-Fort Secondary Campus B</h3>
-                <table className="table table-bordered table-sm">
+                <Table className="table-bordered table-sm">
                   <caption>100% reporting</caption>
                   <thead>
                   <tr>
@@ -323,7 +333,7 @@ export default class VieuxFortSouth2016 extends Component {
                     {Elections.registeredVotersBySection(this.state.results, 'K', 'K4', 'O-Z')}
                   </tr>
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>
