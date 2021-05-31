@@ -36,6 +36,8 @@ import CastriesCentral2016 from "./2016/2016-Castries-Central";
 import Babonneau2016 from "./2016/2016-Babonneau";
 import AnseLaRayeCanaries2016 from "./2016/2016-Anse-La-Raye-Canaries";
 import Home from "./home";
+import Login from "./auth/login";
+import Register from "./auth/register";
 
 const MyRoutes = () => {
   return (
@@ -76,6 +78,8 @@ const MyRoutes = () => {
       <Route path="/districts/:id" component={EditDistrict} />
       <Route path="/polling-stations/:id" component={EditPollingStation} />
       <Route path="/sections/:id" component={EditSection} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
     </Switch>
   )
 }
