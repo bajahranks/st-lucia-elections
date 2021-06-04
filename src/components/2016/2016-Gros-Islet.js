@@ -23,7 +23,7 @@ export default class GrosIslet2016 extends Component {
       .then(response => {
         this.setState({
           results: response.data,
-          isLoading: true
+          isLoading: false
         });
       }).catch(e => { console.log(e) });
   }
@@ -42,7 +42,7 @@ export default class GrosIslet2016 extends Component {
             secondaryColor={"Red"}
             visible={this.state.isLoading}
           />
-          <h2>Castries Central 2016 Results</h2>
+          <h2>Gros-Islet 2016 Results</h2>
           <hr />
           <div className={"row"}>
             {/* A1 (a) - Gros Islet Primary School */}

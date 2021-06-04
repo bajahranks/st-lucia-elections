@@ -12,20 +12,20 @@ class ResultDataService {
     return http.get(`/results/${id}`);
   }
 
-  create(result) {
-    return http.post("/results", result);
+  create(result, token) {
+    return http.post("/results", result, {headers: {'auth-token': token}});
   }
 
-  update(id, data) {
-    return http.put(`/results/edit/${id}`, data);
+  update(id, data, token) {
+    return http.put(`/results/edit/${id}`, data, {headers: {'auth-token': token}});
   }
 
-  delete(id) {
-    return http.delete(`/results/delete/${id}`);
+  delete(id, token) {
+    return http.delete(`/results/delete/${id}`, {headers: {'auth-token': token}});
   }
 
-  deleteAll() {
-    return http.delete(`/results/delete`);
+  deleteAll(token) {
+    return http.delete(`/results/delete`, {headers: {'auth-token': token}});
   }
 
   findByYear(year) {

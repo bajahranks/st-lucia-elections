@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PollingStationDataService from "../../services/polling-station";
 import DistrictDataService from "../../services/district";
 import Loader from "react-loader-spinner";
+import {getToken, getUserFromToken} from "../../helpers/util";
+import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
 
 export default class EditPollingStation extends Component{
   constructor(props) {
@@ -91,7 +93,7 @@ export default class EditPollingStation extends Component{
   updatePollingStation() {
     const currentPollingStation = this.state.currentPollingStation;
 
-    PollingStationDataService.update(this.state.currentPollingStation._id, currentPollingStation)
+    PollingStationDataService.update(currentPollingStation._id, currentPollingStation, getToken())
       .then(() => {
         this.setState({
           message: "The Polling Station was updated successfully!"
@@ -102,7 +104,7 @@ export default class EditPollingStation extends Component{
   }
 
   deletePollingStation() {
-    PollingStationDataService.delete(this.state.currentPollingStation._id)
+    PollingStationDataService.delete(this.state.currentPollingStation._id, getToken())
       .then(() => {
         this.props.history.push('/pollingStations')
       }).catch(error => {
@@ -112,84 +114,87 @@ export default class EditPollingStation extends Component{
 
   render() {
     const { currentPollingStation, districts, message } = this.state;
+    const user = getUserFromToken();
 
     return (
-      <div className={"container col-md-8 col-md-offset-2 mt-3"}>
-        <Loader
-          type={"MutatingDots"}
-          color={"Yellow"}
-          secondaryColor={"Red"}
-          visible={this.state.isLoading}
-        />
-        <div className={"card card-body bg-light"}>
-          <fieldset>
-            <legend>Edit or delete Polling Station</legend>
-            <hr />
-            { message ? (
-              <div className={"alert alert-success"}>
-                <h4>{ message }</h4>
-              </div>
-            ): ("")}
-            {/* Code Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"code"} className={"col-lg-3 col-form-label"}>Code</label>
-              <div>
-                <input
-                  type={"text"}
-                  className={"form-control"}
-                  id={"code"}
-                  name={"code"}
-                  placeholder={"Polling Station code"}
-                  value={currentPollingStation.code}
-                  onChange={this.onChangeCode}
-                  required
-                />
-              </div>
-            </div>
-            {/* Name Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"name"} className={"col-lg-3 col-form-label"}>Name</label>
-              <div>
-                <input
-                  type={"text"}
-                  className={"form-control"}
-                  id={"name"}
-                  name={"name"}
-                  placeholder={"PollingStation name"}
-                  value={currentPollingStation.name}
-                  onChange={this.onChangeName}
-                  required
-                />
-              </div>
-            </div>
-            {/* District Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"district"} className={"col-lg-3 col-form-label"}>District</label>
-              <div>
-                <select className={"form-control"} id={"district"} name={"district"} onChange={this.onChangeDistrict}>
-                  <option value={ currentPollingStation.district._id }>{ currentPollingStation.district.name }</option>
-                  { districts && districts.map(district => (
-                      <option key={ district._id } value={ district._id }>{ district.name }</option>
-                    ))
-                  }
-                </select>
-              </div>
-            </div>
-            {/* Buttons */}
-            <div className={"form-group row mt-3"}>
-              <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.updatePollingStation} className="btn btn-success mr-half">
-                  Edit
-                </button>
-                <button className="btn btn-danger mr-half" onClick={this.deletePollingStation}>
-                  Delete
-                </button>
-                <a className={"btn btn-warning"} href={"/"}>Cancel</a>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-      </div>
+      <Container className={"mt-3"}>
+        <Row className={"justify-content-md-center"}>
+          <Col md={"8"}>
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
+            <Card className={"bg-light"}>
+              <Card.Body>
+                <fieldset>
+                  <legend>Edit or delete Polling Station</legend>
+                  <hr />
+                  { message ? (
+                    <Alert variant={"success"}>
+                      <h4>{ message }</h4>
+                    </Alert>
+                  ): ("")}
+                  {/* Code Field */}
+                  <Form>
+                    <Form.Group as={Row} className={"mb-3"} controlId={"code"}>
+                      <Form.Label column sm="2">Code</Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          name={"code"}
+                          placeholder={"Polling Station code"}
+                          value={currentPollingStation.code}
+                          onChange={this.onChangeCode}
+                          required
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* Name Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"name"}>
+                      <Form.Label column sm="2">Name</Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          name={"name"}
+                          placeholder={"PollingStation name"}
+                          value={currentPollingStation.name}
+                          onChange={this.onChangeName}
+                          required
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* District Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"district"}>
+                      <Form.Label column sm="2">District</Form.Label>
+                      <Col sm="10">
+                        <Form.Select name={"district"} onChange={this.onChangeDistrict}>
+                          <option value={ currentPollingStation.district._id }>{ currentPollingStation.district.name }</option>
+                          { districts && districts.map(district => (
+                            <option key={ district._id } value={ district._id }>{ district.name }</option>
+                            ))
+                          }
+                        </Form.Select>
+                      </Col>
+                    </Form.Group>
+                    {/* Buttons */}
+                    { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
+                    <Button variant={"success"} className="mr-half" onClick={this.updatePollingStation} >
+                      Edit
+                    </Button>
+                    }
+                    { (user && user.role === 'Admin') &&
+                    <Button variant={"danger"} className="mr-half" onClick={() => this.deletePollingStation()}>
+                      Delete
+                    </Button>
+                    }
+                    <a className={"btn btn-warning"} href={"/"}>Cancel</a>
+                  </Form>
+                </fieldset>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

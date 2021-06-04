@@ -1,19 +1,23 @@
 import React, { useContext } from "react";
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import { removeUserSession } from "../helpers/util";
+import {getToken, removeUserSession} from "../helpers/util";
 import { store } from '../store/store';
+import { useHistory } from "react-router";
 
 const Navigation = () => {
   const { state, dispatch } = useContext(store);
+  const history = useHistory();
+
   const logoutUser = () => {
     removeUserSession();
     dispatch({type : 'LOGIN_USER', payload : {isAuthenticated : false}})
+    history.push({pathname: '/'});
   }
 
   return (
     <Navbar expand={"lg"} className={"nav-bg"}>
-      <Navbar.Brand ><Link to={"/"}>St. Lucia Elections</Link></Navbar.Brand>
+      <Navbar.Brand><Link to={"/"}>St. Lucia Elections</Link></Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav" className={"justify-content-end"}>
         <Nav>
@@ -35,9 +39,9 @@ const Navigation = () => {
           <Nav.Item>
             <Link to={"/sections"} className="nav-link">Sections</Link>
           </Nav.Item>
-          { !state.isAuthenticated ?
+          { !state.isAuthenticated && !getToken() ?
             <>
-              <Nav.Item>
+              <Nav.Item className={"left-divider"}>
                 <Link to={"/register"} className="nav-link">Register</Link>
               </Nav.Item>
               <Nav.Item>
@@ -45,8 +49,8 @@ const Navigation = () => {
               </Nav.Item>
             </> : null
           }
-          { state.isAuthenticated ?
-            <li className="nav-item">
+          { state.isAuthenticated || getToken() ?
+            <li className="nav-item left-divider">
               <input type="button" className={"logout"} onClick={logoutUser} value="Log Out" />
             </li>
             : null

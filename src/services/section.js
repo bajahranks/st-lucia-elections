@@ -4,28 +4,28 @@ import http from "../helpers/http-common";
  * CRUD methods for manipulating section data.
  */
 class SectionDataService {
-  getAll(token) {
-    return http.get("/sections", {headers: {'auth-token': token}});
+  getAll() {
+    return http.get("/sections");
   }
 
   get(id) {
     return http.get(`/sections/${id}`);
   }
 
-  create(section) {
-    return http.post("/sections", section);
+  create(section, token) {
+    return http.post("/sections", section, {headers: {'auth-token': token}});
   }
 
-  update(id, data) {
-    return http.put(`/sections/edit/${id}`, data);
+  update(id, data, token) {
+    return http.put(`/sections/edit/${id}`, data, {headers: {'auth-token': token}});
   }
 
-  delete(id) {
-    return http.delete(`/sections/delete/${id}`);
+  delete(id, token) {
+    return http.delete(`/sections/delete/${id}`, {headers: {'auth-token': token}});
   }
 
-  deleteAll() {
-    return http.delete(`/sections/delete`);
+  deleteAll(token) {
+    return http.delete(`/sections/delete`, {headers: {'auth-token': token}});
   }
 
   findByName(name) {

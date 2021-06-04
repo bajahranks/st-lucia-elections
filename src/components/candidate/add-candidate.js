@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CandidateDataService from "../../services/candidate";
 import LookupService from "../../services/lookup";
 import Loader from "react-loader-spinner";
+import {getToken} from "../../helpers/util";
 
 export default class AddCandidate extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ export default class AddCandidate extends Component {
       comments: this.state.comments,
     }
 
-    CandidateDataService.create(candidate).then(response => {
+    CandidateDataService.create(candidate, getToken()).then(response => {
       this.setState({
         submitted: response.data.message
       });

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PartyDataService from "../../services/party";
 import { Link } from "react-router-dom";
 import Loader from "react-loader-spinner";
+import {getToken, getUserFromToken} from "../../helpers/util";
+import {Button, Col, Container, FormControl, InputGroup, ListGroup, Row} from "react-bootstrap";
 
 export default class Party extends Component {
   constructor(props) {
@@ -65,7 +67,7 @@ export default class Party extends Component {
   }
 
   deleteParty() {
-    PartyDataService.delete(this.state.currentParty._id)
+    PartyDataService.delete(this.state.currentParty._id, getToken())
       .then(response => {
         this.refreshList();
       })
@@ -75,7 +77,7 @@ export default class Party extends Component {
   }
 
   removeAllParties() {
-    PartyDataService.deleteAll()
+    PartyDataService.deleteAll(getToken())
       .then(response => {
         this.refreshList();
       })
@@ -98,114 +100,111 @@ export default class Party extends Component {
 
   render() {
     const { searchName, parties, currentParty, currentIndex } = this.state;
+    const user = getUserFromToken();
 
     return (
-      <div className="container list row">
-        <div className="col-md-8">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Name"
-              value={searchName}
-              onChange={this.onChangeSearchName}
-            />
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                onClick={this.searchName}
-              >
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <h4>Party List</h4>
-          <Link
-            to={"/add-party/"}
-            title={"Add Party"}
-            aria-label={"Add Party"}
-            className={"btn btn-primary mb-2 mr-half"}
-          ><span className={"mr-half"}>Add Party</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                 className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-              <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-            </svg>
-          </Link>
-          <button
-            className="btn btn-danger mb-2"
-            onClick={this.removeAllParties}
-          >
-            Remove All
-          </button>
-          <ul className="list-group">
-            <Loader
-              type={"MutatingDots"}
-              color={"Yellow"}
-              secondaryColor={"Red"}
-              visible={this.state.isLoading}
-            />
-            {parties && parties.map((party, index) => (
-              <li
-                className={
-                  "list-group-item " +
-                  (index === currentIndex ? "active" : "")
-                }
-                onClick={() => this.setActiveParty(party, index)}
-                key={index}
-              >
-                {party.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="col-md-6">
-          {currentParty ? (
-            <div>
-              <h4>Party Details</h4>
-              <div>
-                <label>
-                  <strong>Name:</strong>
-                </label>{" "}
-                {currentParty.name}
-              </div>
-              <div>
-                <label>
-                  <strong>Short Name:</strong>
-                </label>{" "}
-                {currentParty.abbreviation}
-              </div>
-              <div>
-                <label>
-                  <strong>Colour:</strong>
-                </label>{" "}
-                <div id={"rect"} style={{ 'display':'inline-block', 'backgroundColor': `${currentParty.colour}`}}>
-                </div>
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentParty.description}
-              </div>
-              <Link to={"/parties/" + currentParty._id} className="btn btn-success mr-half">
-                Edit
+      <Container>
+        <Row>
+          <Col md={"6"}>
+            <h4>Party List</h4>
+            { (user && user.role === 'Admin') &&
+            <>
+              <Link
+                to={"/add-party/"}
+                title={"Add Party"}
+                aria-label={"Add Party"}
+                className={"btn btn-primary mb-2 mr-half"}
+              ><span className={"mr-half"}>Add Party</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                </svg>
               </Link>
-              <button className="btn btn-danger mr-half" onClick={this.deleteParty}>
-                Delete
-              </button>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Party...</p>
-            </div>
-          )}
-        </div>
-      </div>
+              <Button className="mb-2" variant={"danger"} onClick={this.removeAllParties}>
+                Remove All
+              </Button>
+            </>
+            }
+            <InputGroup className={"mb-3"}>
+              <FormControl
+                placeholder={"Search by Name"}
+                aria-label={"Search by Name"}
+                value={searchName}
+                onChange={this.onChangeSearchName}
+              />
+              <Button variant={"outline-secondary"} onClick={this.searchName}>
+                Search
+              </Button>
+            </InputGroup>
+            <ListGroup as={"ul"}>
+              <Loader
+                type={"MutatingDots"}
+                color={"Yellow"}
+                secondaryColor={"Red"}
+                visible={this.state.isLoading}
+              />
+              {parties && parties.map((party, index) => (
+                <ListGroup.Item as={"li"}
+                                className={(index === currentIndex ? "active" : "")}
+                                onClick={() => this.setActiveParty(party, index)}
+                                key={index}
+                >
+                  {party.name}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Col>
+          <Col md={"6"}>
+            {currentParty ? (
+              <div>
+                <h4>Party Details</h4>
+                <div>
+                  <label>
+                    <strong>Name:</strong>
+                  </label>{" "}
+                  {currentParty.name}
+                </div>
+                <div>
+                  <label>
+                    <strong>Short Name:</strong>
+                  </label>{" "}
+                  {currentParty.abbreviation}
+                </div>
+                <div>
+                  <label>
+                    <strong>Colour:</strong>
+                  </label>{" "}
+                  <div id={"rect"} style={{ 'display':'inline-block', 'backgroundColor': `${currentParty.colour}`}}>
+                  </div>
+                </div>
+                <div>
+                  <label>
+                    <strong>Description:</strong>
+                  </label>{" "}
+                  {currentParty.description}
+                </div>
+                { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
+                  <Link to={"/parties/" + currentParty._id} className="btn btn-success mr-half">
+                    Edit
+                  </Link>
+                }
+                { (user && user.role === 'Admin') &&
+                  <Button variant={"danger"} className="mr-half" onClick={this.deleteParty}>
+                    Delete
+                  </Button>
+                }
+
+              </div>
+            ) : (
+              <div>
+                <br />
+                <p>Please click on a Party...</p>
+              </div>
+            )}
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

@@ -12,20 +12,20 @@ class PollingStationDataService {
     return http.get(`/polling-stations/${id}`);
   }
 
-  create(pollingStation) {
-    return http.post("/polling-stations", pollingStation);
+  create(pollingStation, token) {
+    return http.post("/polling-stations", pollingStation, {headers: {'auth-token': token}});
   }
 
-  update(id, data) {
-    return http.put(`/polling-stations/edit/${id}`, data);
+  update(id, data, token) {
+    return http.put(`/polling-stations/edit/${id}`, data, {headers: {'auth-token': token}});
   }
 
-  delete(id) {
-    return http.delete(`/polling-stations/delete/${id}`);
+  delete(id, token) {
+    return http.delete(`/polling-stations/delete/${id}`, {headers: {'auth-token': token}});
   }
 
-  deleteAll() {
-    return http.delete(`/polling-stations/delete`);
+  deleteAll(token) {
+    return http.delete(`/polling-stations/delete`, {headers: {'auth-token': token}});
   }
 
   findByName(name) {

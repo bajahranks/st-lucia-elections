@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import SectionDataService from "../../services/section";
 import PollingStationDataService from "../../services/polling-station";
 import Loader from "react-loader-spinner";
+import {getToken, getUserFromToken} from "../../helpers/util";
+import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
 
 export default class EditSection extends Component{
   constructor(props) {
@@ -77,7 +79,7 @@ export default class EditSection extends Component{
   updateSection() {
     const currentSection = this.state.currentSection;
 
-    SectionDataService.update(this.state.currentSection._id, currentSection)
+    SectionDataService.update(currentSection._id, currentSection, getToken())
       .then(() => {
         this.setState({
           message: "The section was updated successfully!"
@@ -88,7 +90,7 @@ export default class EditSection extends Component{
   }
 
   deleteSection() {
-    SectionDataService.delete(this.state.currentSection._id)
+    SectionDataService.delete(this.state.currentSection._id, getToken())
       .then(() => {
         this.props.history.push('/sections')
       }).catch(error => {
@@ -98,68 +100,74 @@ export default class EditSection extends Component{
 
   render() {
     const { currentSection, pollingStations, message } = this.state;
+    const user = getUserFromToken();
 
     return (
-      <div className={"container col-md-8 col-md-offset-2 mt-3"}>
-        <Loader
-          type={"MutatingDots"}
-          color={"Yellow"}
-          secondaryColor={"Red"}
-          visible={this.state.isLoading}
-        />
-        <div className={"card card-body bg-light"}>
-          <fieldset>
-            <legend>Edit or delete section</legend>
-            <hr />
-            { message ? (
-              <div className={"alert alert-success"}>
-                <h4>{ message }</h4>
-              </div>
-            ): ("")}
-            {/* Name Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"name"} className={"col-lg-3 col-form-label"}>Name</label>
-              <div>
-                <input
-                  type={"text"}
-                  className={"form-control"}
-                  id={"name"}
-                  name={"name"}
-                  placeholder={"Section name"}
-                  value={currentSection.name}
-                  onChange={this.onChangeName}
-                  required
-                />
-              </div>
-            </div>
-            {/* PollingStation Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"pollingStation"} className={"col-lg-3 col-form-label"}>PollingStation</label>
-              <div>
-                <select className={"form-control"} id={"pollingStation"} name={"pollingStation"} onChange={this.onChangePollingStation}>
-                  <option value={ currentSection.pollingStation._id }>{ currentSection.pollingStation.name }</option>
-                  { pollingStations && pollingStations.map(pollingStation => (
-                      <option key={ pollingStation._id } value={ pollingStation._id }>{ pollingStation.name }</option>
-                    ))
-                  }
-                </select>
-              </div>
-            </div>
-            {/* Buttons */}
-            <div className={"form-group row mt-3"}>
-              <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.updateSection} className="btn btn-success mr-half">
-                  Edit
-                </button>
-                <button className="btn btn-danger mr-half" onClick={this.deleteSection}>
-                  Delete
-                </button>
-                <a className={"btn btn-warning"} href={"/"}>Cancel</a>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-      </div>
+      <Container className={"mt-3"}>
+        <Row className={"justify-content-md-center"}>
+          <Col md={"8"}>
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
+            <Card className={"card card-body bg-light"}>
+              <Card.Body>
+                <fieldset>
+                  <legend>Edit or delete section</legend>
+                  <hr />
+                  { message ? (
+                    <Alert variant={"success"}>
+                      <h4>{ message }</h4>
+                    </Alert>
+                  ): ("")}
+                  {/* Name Field */}
+                  <Form>
+                    <Form.Group as={Row} className={"mb-3"} controlId={"name"}>
+                      <Form.Label column sm="3">Name</Form.Label>
+                      <Col sm="9">
+                        <Form.Control
+                          name={"name"}
+                          placeholder={"Section name"}
+                          value={currentSection.name}
+                          onChange={this.onChangeName}
+                          required
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* PollingStation Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"pollingStation"}>
+                      <Form.Label column sm="3">PollingStation</Form.Label>
+                      <Col sm={"9"}>
+                        <Form.Select name={"pollingStation"} onChange={this.onChangePollingStation}>
+                          <option value={ currentSection.pollingStation._id }>{ currentSection.pollingStation.name }</option>
+                          { pollingStations && pollingStations.map(pollingStation => (
+                              <option key={ pollingStation._id } value={ pollingStation._id }>{ pollingStation.name }</option>
+                            ))
+                          }
+                        </Form.Select>
+                      </Col>
+                    </Form.Group>
+                    {/* Buttons */}
+                    { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
+                    <Button variant={"success"} className="mr-half" onClick={this.updateSection} >
+                      Edit
+                    </Button>
+                    }
+                    { (user && user.role === 'Admin') &&
+                    <Button variant={"danger"} className="mr-half" onClick={() => this.deleteSection()}>
+                      Delete
+                    </Button>
+                    }
+                    <a className={"btn btn-warning"} href={"/"}>Cancel</a>
+                  </Form>
+                </fieldset>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

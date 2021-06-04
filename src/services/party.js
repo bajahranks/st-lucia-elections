@@ -12,20 +12,20 @@ class PartyDataService {
     return http.get(`/parties/${id}`);
   }
 
-  create(party) {
-    return http.post("/parties", party);
+  create(party, token) {
+    return http.post("/parties", party, {headers: {'auth-token': token}});
   }
 
-  update(id, data) {
-    return http.put(`/parties/edit/${id}`, data);
+  update(id, data, token) {
+    return http.put(`/parties/edit/${id}`, data, {headers: {'auth-token': token}});
   }
 
-  delete(id) {
-    return http.delete(`/parties/delete/${id}`);
+  delete(id, token) {
+    return http.delete(`/parties/delete/${id}`, {headers: {'auth-token': token}});
   }
 
-  deleteAll() {
-    return http.delete(`/parties/delete`);
+  deleteAll(token) {
+    return http.delete(`/parties/delete`, {headers: {'auth-token': token}});
   }
 
   findByName(name) {

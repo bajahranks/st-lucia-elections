@@ -23,7 +23,8 @@ export const setUserSession = (token) => {
 }
 
 // get user from token
-export const getUserFromToken = token => {
+export const getUserFromToken = () => {
+  const token = getToken();
   if (token) {
     try {
       return JSON.parse(atob(token.split('.')[1]));

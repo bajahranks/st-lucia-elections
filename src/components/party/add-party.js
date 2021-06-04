@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PartyDataService from "../../services/party";
+import {getToken, getUserFromToken} from "../../helpers/util";
 
 export default class AddParty extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ export default class AddParty extends Component {
       colour: this.state.colour
     }
 
-    PartyDataService.create(party).then(response => {
+    PartyDataService.create(party, getToken()).then(response => {
       this.setState({
         submitted: true
       });
@@ -87,6 +88,8 @@ export default class AddParty extends Component {
   }
 
   render() {
+    const user = getUserFromToken();
+
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
         <div className={"card card-body bg-light"}>
@@ -157,9 +160,11 @@ export default class AddParty extends Component {
             {/* Buttons */}
             <div className={"form-group row mt-3"}>
               <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.saveParty} className="btn btn-success mr-half">
-                  Save
-                </button>
+                {user.role === 'Admin' &&
+                  <button onClick={this.saveParty} className="btn btn-success mr-half">
+                    Save
+                  </button>
+                }
                 <a className={"btn btn-danger"} href={"/"}>Cancel</a>
               </div>
             </div>

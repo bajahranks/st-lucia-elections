@@ -3,13 +3,15 @@ import CandidateDataService from "../../services/candidate";
 import DistrictDataService from "../../services/district";
 import PartyDataService from "../../services/party";
 import Loader from "react-loader-spinner";
+import {Card, Col, Container, Form, Row, Alert, Button} from "react-bootstrap";
+import {getToken, getUserFromToken} from "../../helpers/util";
 
 export default class EditCandidate extends Component{
   constructor(props) {
     super(props);
     // Methods
     this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeDob = this.onChangeDob.bind(this);
+    //this.onChangeDob = this.onChangeDob.bind(this);
     this.onChangeGender = this.onChangeGender.bind(this);
     this.onChangeParty = this.onChangeParty.bind(this);
     this.onChangeDistrict = this.onChangeDistrict.bind(this);
@@ -17,7 +19,7 @@ export default class EditCandidate extends Component{
     this.getCandidate = this.getCandidate.bind(this);
     this.updateCandidate = this.updateCandidate.bind(this);
     this.deleteCandidate = this.deleteCandidate.bind(this);
-    this.formatDate = this.formatDate.bind(this);
+    //this.formatDate = this.formatDate.bind(this);
 
     // Defaults
     this.state = {
@@ -54,7 +56,7 @@ export default class EditCandidate extends Component{
     }));
   }
 
-  onChangeDob(e) {
+  /*onChangeDob(e) {
     const dob = e.target.value;
 
     this.setState(prevState => ({
@@ -63,7 +65,7 @@ export default class EditCandidate extends Component{
         dob: dob
       }
     }));
-  }
+  }*/
 
   onChangeGender(e) {
     const gender = e.target.value;
@@ -119,6 +121,17 @@ export default class EditCandidate extends Component{
       }).catch(e => { console.log(e) });
   }
 
+  retrieveDistricts() {
+    DistrictDataService.getAll()
+      .then(response => {
+        this.setState({
+          districts: response.data
+        });
+      }).catch(e => {
+      console.log(e)
+    });
+  }
+
   getCandidate(id) {
     CandidateDataService.get(id)
       .then(response => {
@@ -130,19 +143,10 @@ export default class EditCandidate extends Component{
     });
   }
 
-  retrieveDistricts() {
-    DistrictDataService.getAll()
-      .then(response => {
-        this.setState({
-          districts: response.data
-        });
-      }).catch(e => { console.log(e) });
-  }
-
   updateCandidate() {
     const currentCandidate = this.state.currentCandidate;
 
-    CandidateDataService.update(this.state.currentCandidate._id, currentCandidate)
+    CandidateDataService.update(currentCandidate._id, currentCandidate, getToken())
       .then(() => {
         this.setState({
           message: "The candidate was updated successfully!"
@@ -151,59 +155,153 @@ export default class EditCandidate extends Component{
   }
 
   deleteCandidate() {
-    CandidateDataService.delete(this.state.currentCandidate._id)
+    CandidateDataService.delete(this.state.currentCandidate._id, getToken())
       .then(() => {
         this.props.history.push('/candidates')
       }).catch(error => { console.log(error); });
   }
 
-  formatDate(date) {
+  /*formatDate(date) {
     const day = new Date(date).getDate();
     const month = new Date(date).getMonth();
     const year = new Date(date).getFullYear();
     const formattedDate = year + '-' + month + '-' + day;
 
     return (formattedDate);
-  }
+  }*/
 
   render() {
     const { currentCandidate, parties, districts, message } = this.state;
+    const user = getUserFromToken();
 
     return (
-      <div className={"container col-md-8 col-md-offset-2 mt-3"}>
-        <Loader
-          type={"MutatingDots"}
-          color={"Yellow"}
-          secondaryColor={"Red"}
-          visible={this.state.isLoading}
-        />
-        <div className={"card card-body bg-light"}>
-          <fieldset>
-            <legend>Edit or delete candidate</legend>
-            <hr />
-            { message ? (
-              <div className={"alert alert-success"}>
-                <h4>{ message }</h4>
-              </div>
-            ): ("")}
-            {/* Name Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"name"} className={"col-lg-3 col-form-label"}>Name</label>
-              <div>
-                <input
-                  type={"text"}
-                  className={"form-control"}
-                  id={"name"}
-                  name={"name"}
-                  placeholder={"Candidate name"}
-                  value={currentCandidate.name}
-                  onChange={this.onChangeName}
-                  required
-                />
-              </div>
-            </div>
-            {/* DOB Field @todo: Find a datepicker that works with react states or replace with text field. */}
-            {/*<div className={"form-group row"}>
+      <Container className={"mt-3"}>
+        <Row className={"justify-content-md-center"}>
+          <Col md={"8"}>
+            <Loader
+              type={"MutatingDots"}
+              color={"Yellow"}
+              secondaryColor={"Red"}
+              visible={this.state.isLoading}
+            />
+            <Card bg={"light"}>
+              <Card.Body>
+                <fieldset>
+                  <legend>Edit or delete candidate</legend>
+                  <hr />
+                  { message ? (
+                    <Alert variant={"success"}>
+                      <h4>{ message }</h4>
+                    </Alert>
+                  ): ("")}
+                  {/* Name Field */}
+                  <Form>
+                    <Form.Group as={Row} className={"mb-3"} controlId={"name"}>
+                      <Form.Label column sm="2">Name</Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type={"text"}
+                          name={"name"}
+                          placeholder={"Candidate name"}
+                          value={currentCandidate.name}
+                          onChange={this.onChangeName}
+                          required
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* Gender Field */}
+                    <Form.Group as={Row} className={"mb-3"}>
+                      <Form.Label column sm="2">Gender</Form.Label>
+                      <Col sm="10">
+                        <Form.Check
+                          inline
+                          label={"Male"}
+                          type={"radio"}
+                          id={"male"}
+                          name={"gender"}
+                          value={"Male"}
+                          checked={currentCandidate.gender === "Male"}
+                          onChange={this.onChangeGender}
+                        />
+                        <Form.Check
+                          inline
+                          label={"Female"}
+                          type={"radio"}
+                          id={"female"}
+                          name={"gender"}
+                          value={"Female"}
+                          checked={currentCandidate.gender === "Female"}
+                          onChange={this.onChangeGender}
+                        />
+                        <Form.Check
+                          inline
+                          label={"Other"}
+                          type={"radio"}
+                          id={"other"}
+                          name={"gender"}
+                          value={"Other"}
+                          className={"custom-control-input"}
+                          checked={currentCandidate.gender === "Other"}
+                          onChange={this.onChangeGender}
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* Party Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"party"}>
+                      <Form.Label column sm="2">Party</Form.Label>
+                      <Col sm="10">
+                        <Form.Select name={"party"} aria-label={"Select Party"} onChange={this.onChangeParty}>
+                          <option value={ currentCandidate.party._id }>{ currentCandidate.party.name }</option>
+                          { parties && parties.map(party => (
+                            <option key={party._id} value={ party._id }>{ party.name }</option>
+                          ))
+                          }
+                        </Form.Select>
+                      </Col>
+                    </Form.Group>
+                    {/* District Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"district"}>
+                      <Form.Label column sm="2">District</Form.Label>
+                      <Col sm="10">
+                        <Form.Select aria-label={"Select District"} name={"district"} onChange={this.onChangeDistrict}>
+                          <option value={ currentCandidate.district._id }>{ currentCandidate.district.name }</option>
+                          { districts && districts.map(district => (
+                            <option key={district._id} value={ district._id }>{ district.name }</option>
+                          ))
+                          }
+                        </Form.Select>
+                      </Col>
+                    </Form.Group>
+                    {/* Comments Field */}
+                    <Form.Group as={Row} className={"mb-3"} controlId={"comments"}>
+                      <Form.Label column sm="2">Comments</Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          as={"textarea"}
+                          name={"comments"}
+                          placeholder={"Say something about the candidate"}
+                          style={{ height: '100px'}}
+                          onChange={this.onChangeComments}
+                          defaultValue={currentCandidate.comments}
+                        />
+                      </Col>
+                    </Form.Group>
+                    {/* Buttons */}
+                    { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
+                      <Button variant={"success"} className="mr-half" onClick={this.updateCandidate} >
+                        Edit
+                      </Button>
+                    }
+                    { (user && user.role === 'Admin') &&
+                      <Button variant={"danger"} className="mr-half" onClick={() => this.deleteCandidate()}>
+                        Delete
+                      </Button>
+                    }
+                    <a className={"btn btn-warning"} href={"/"}>Cancel</a>
+                  </Form>
+
+                  {/* DOB Field @todo: Find a datepicker that works with react states or replace with text field. */}
+                  {/*<div className={"form-group row"}>
               <label htmlFor={"dob"} className={"col-lg-3 col-form-label"}>DOB</label>
               <div>
                 <input
@@ -216,102 +314,12 @@ export default class EditCandidate extends Component{
                 />
               </div>
             </div>*/}
-            {/* Gender Field */}
-            <div className={"form-group row"}>
-              <p className={"col-lg-3"}>Gender</p>
-              <div className={"form-group custom-control custom-radio custom-control-inline"}>
-                <input
-                  type={"radio"}
-                  id={"male"}
-                  name={"gender"}
-                  value={"Male"}
-                  className={"custom-control-input"}
-                  checked={currentCandidate.gender === "Male"}
-                  onChange={this.onChangeGender}
-                />
-                <label htmlFor={"male"} className={"custom-control-label"}>Male</label>
-              </div>{}
-              <div className={"form-group custom-control custom-radio custom-control-inline"}>
-                <input
-                  type={"radio"}
-                  id={"female"}
-                  name={"gender"}
-                  value={"Female"}
-                  className={"custom-control-input"}
-                  checked={currentCandidate.gender === "Female"}
-                  onChange={this.onChangeGender}
-                />
-                <label htmlFor={"female"} className={"custom-control-label"}>Female</label>
-              </div>
-              <div className={"form-group custom-control custom-radio custom-control-inline"}>
-                <input
-                  type={"radio"}
-                  id={"other"}
-                  name={"gender"}
-                  value={"Other"}
-                  className={"custom-control-input"}
-                  checked={currentCandidate.gender === "Other"}
-                  onChange={this.onChangeGender}
-                />
-                <label htmlFor={"other"} className={"custom-control-label"}>Other</label>
-              </div>
-            </div>
-            {/* Party Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"party"} className={"col-lg-3 col-form-label"}>Party</label>
-              <div>
-                <select className={"form-control"} id={"party"} name={"party"} onChange={this.onChangeParty}>
-                  <option value={ currentCandidate.party._id }>{ currentCandidate.party.name }</option>
-                  { parties && parties.map(party => (
-                      <option key={party._id} value={ party._id }>{ party.name }</option>
-                    ))
-                  }
-                </select>
-              </div>
-            </div>
-            {/* District Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"district"} className={"col-lg-3 col-form-label"}>District</label>
-              <div>
-                <select className={"form-control"} id={"district"} name={"district"} onChange={this.onChangeDistrict}>
-                  <option value={ currentCandidate.district._id }>{ currentCandidate.district.name }</option>
-                  { districts && districts.map(district => (
-                      <option key={district._id} value={ district._id }>{ district.name }</option>
-                    ))
-                  }
-                </select>
-              </div>
-            </div>
-            {/* Comments Field */}
-            <div className={"form-group row"}>
-              <label htmlFor={"comments"} className={"col-lg-3 col-form-label"}>Comments</label>
-              <div>
-                <textarea
-                  className={"form-control"}
-                  id={"comments"}
-                  name={"comments"}
-                  placeholder={"Say something about the candidate"}
-                  rows={"5"} cols={"30"}
-                  onChange={this.onChangeComments}
-                  defaultValue={currentCandidate.comments}
-                ></textarea>
-              </div>
-            </div>
-            {/* Buttons */}
-            <div className={"form-group row mt-3"}>
-              <div className={"col-lg-10 col-lg-offset-2"}>
-                <button onClick={this.updateCandidate} className="btn btn-success mr-half">
-                  Edit
-                </button>
-                <button className="btn btn-danger mr-half" onClick={this.deleteCandidate}>
-                  Delete
-                </button>
-                <a className={"btn btn-warning"} href={"/"}>Cancel</a>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-      </div>
+                </fieldset>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

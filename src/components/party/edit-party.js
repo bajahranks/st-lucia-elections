@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PartyDataService from "../../services/party";
 import Loader from "react-loader-spinner";
+import {getToken, getUserFromToken} from "../../helpers/util";
+import {Button, FormGroup} from "react-bootstrap";
 
 export default class EditParty extends Component{
   constructor(props) {
@@ -92,7 +94,7 @@ export default class EditParty extends Component{
   updateParty() {
     const currentParty = this.state.currentParty;
 
-    PartyDataService.update(this.state.currentParty._id, currentParty)
+    PartyDataService.update(this.state.currentParty._id, currentParty, getToken())
       .then(() => {
         this.setState({
           message: "The party was updated successfully!"
@@ -104,7 +106,7 @@ export default class EditParty extends Component{
   }
 
   deleteParty() {
-    PartyDataService.delete(this.state.currentParty._id)
+    PartyDataService.delete(this.state.currentParty._id, getToken())
       .then(() => {
         this.props.history.push('/parties')
       })
@@ -115,6 +117,7 @@ export default class EditParty extends Component{
 
   render() {
     const { currentParty, message } = this.state;
+    const user = getUserFromToken();
 
     return (
       <div className={"container col-md-8 col-md-offset-2 mt-3"}>
@@ -180,7 +183,7 @@ export default class EditParty extends Component{
                 </div>
               </div>
               {/* Colour Field */}
-              <div className={"form-group row"}>
+              <FormGroup className={"mb-3"}>
                 <label htmlFor={"colour"} className={"col-lg-3 col-form-label"}>Colour</label>
                 <div>
                   <input
@@ -192,19 +195,19 @@ export default class EditParty extends Component{
                     onChange={this.onChangeColour}
                   />
                 </div>
-              </div>
+              </FormGroup>
               {/* Buttons */}
-              <div className={"form-group row mt-3"}>
-                <div className={"col-lg-10 col-lg-offset-2"}>
-                  <button onClick={this.updateParty} className="btn btn-success mr-half">
-                    Edit
-                  </button>
-                  <button className="btn btn-danger mr-half" onClick={this.deleteParty}>
-                    Delete
-                  </button>
-                  <a className={"btn btn-warning"} href={"/"}>Cancel</a>
-                </div>
-              </div>
+            { (user.role === 'Admin' || user.role === 'Staff') &&
+              <Button variant={"success"} onClick={this.updateParty} className="mr-half">
+                Edit
+              </Button>
+            }
+            { user.role === 'Admin' &&
+              <Button variant={"danger"} className="mr-half" onClick={this.deleteParty}>
+                Delete
+              </Button>
+            }
+            <a className={"btn btn-warning"} href={"/parties"}>Cancel</a>
           </fieldset>
         </div>
       </div>

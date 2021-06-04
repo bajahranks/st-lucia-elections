@@ -38,6 +38,7 @@ import AnseLaRayeCanaries2016 from "./2016/2016-Anse-La-Raye-Canaries";
 import Home from "./home";
 import Login from "./auth/login";
 import Register from "./auth/register";
+import PrivateRoute from "../helpers/privateRoutes";
 
 const MyRoutes = () => {
   return (
@@ -66,18 +67,18 @@ const MyRoutes = () => {
       <Route exact path="/districts" component={District} />
       <Route exact path="/polling-stations" component={PollingStation} />
       <Route exact path="/sections" component={Section} />
-      <Route exact path="/add-party" component={AddParty} />
-      <Route exact path="/add-result" component={AddResult} />
-      <Route exact path="/add-candidate" component={AddCandidate} />
-      <Route exact path="/add-district" component={AddDistrict} />
-      <Route exact path="/add-polling-station" component={AddPollingStation} />
-      <Route exact path="/add-section" component={AddSection} />
-      <Route path="/parties/:id" component={EditParty} />
-      <Route path="/results/:id" component={EditResult} />
-      <Route path="/candidates/:id" component={EditCandidate} />
-      <Route path="/districts/:id" component={EditDistrict} />
-      <Route path="/polling-stations/:id" component={EditPollingStation} />
-      <Route path="/sections/:id" component={EditSection} />
+      <PrivateRoute exact path="/add-party" component={AddParty} />
+      <PrivateRoute exact path="/add-result" component={AddResult} />
+      <PrivateRoute exact path="/add-candidate" component={AddCandidate} />
+      <PrivateRoute exact path="/add-district" component={AddDistrict} />
+      <PrivateRoute exact path="/add-polling-station" component={AddPollingStation} />
+      <PrivateRoute exact path="/add-section" component={AddSection} />
+      <PrivateRoute path="/parties/:id" component={EditParty} />
+      <PrivateRoute path="/results/:id" component={EditResult} />
+      <PrivateRoute path="/candidates/:id" component={EditCandidate} />
+      <PrivateRoute path="/districts/:id" component={EditDistrict} />
+      <PrivateRoute path="/polling-stations/:id" component={EditPollingStation} />
+      <PrivateRoute path="/sections/:id" component={EditSection} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Register} />
     </Switch>

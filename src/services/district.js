@@ -12,20 +12,20 @@ class DistrictDataService {
     return http.get(`/districts/${id}`);
   }
 
-  create(district) {
-    return http.post("/districts", district);
+  create(district, token) {
+    return http.post("/districts", district, {headers: {'auth-token': token}});
   }
 
-  update(id, data) {
-    return http.put(`/districts/edit/${id}`, data);
+  update(id, data, token) {
+    return http.put(`/districts/edit/${id}`, data, {headers: {'auth-token': token}});
   }
 
-  delete(id) {
-    return http.delete(`/districts/delete/${id}`);
+  delete(id, token) {
+    return http.delete(`/districts/delete/${id}`, {headers: {'auth-token': token}});
   }
 
-  deleteAll() {
-    return http.delete(`/districts/delete`);
+  deleteAll( token) {
+    return http.delete(`/districts/delete`, {headers: {'auth-token': token}});
   }
 
   findByName(name) {

@@ -1,24 +1,21 @@
 import React, { Component } from "react";
 import SectionDataService from "../../services/section";
 import { Link } from "react-router-dom";
-import { getToken } from "../../helpers/util";
+import {getToken, getUserFromToken} from "../../helpers/util";
 import Loader from "react-loader-spinner";
+import {Button, Card, Col, Container, FormControl, InputGroup, Row} from "react-bootstrap";
 
 export default class Section extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
     this.retrieveSections = this.retrieveSections.bind(this);
-    this.refreshList = this.refreshList.bind(this);
-    this.setActiveSection = this.setActiveSection.bind(this);
     this.removeAllSections = this.removeAllSections.bind(this);
     this.searchName = this.searchName.bind(this);
     this.deleteSection = this.deleteSection.bind(this);
 
     this.state = {
       sections: [],
-      currentSection: null,
-      currentIndex: -1,
       searchName: "",
       isLoading: true
     };
@@ -38,7 +35,7 @@ export default class Section extends Component {
   }
 
   retrieveSections() {
-    SectionDataService.getAll(getToken())
+    SectionDataService.getAll()
       .then(response => {
         this.setState({
           sections: response.data,
@@ -47,30 +44,15 @@ export default class Section extends Component {
       }).catch(e => { console.log(e) });
   }
 
-  refreshList() {
-    this.retrieveSections();
-    this.setState({
-      currentSection: null,
-      currentIndex: -1
-    });
-  }
-
-  setActiveSection(section, index) {
-    this.setState({
-      currentSection: section,
-      currentIndex: index
-    });
-  }
-
   deleteSection() {
-    SectionDataService.delete(this.state.currentSection._id)
+    SectionDataService.delete(this.state.currentSection._id, getToken())
       .then(() => {
         this.refreshList();
       }).catch(error => { console.log(error) });
   }
 
   removeAllSections() {
-    SectionDataService.deleteAll()
+    SectionDataService.deleteAll(getToken())
       .then(() => {
         this.refreshList();
       }).catch(e => { console.log(e) });
@@ -87,101 +69,77 @@ export default class Section extends Component {
 
   render() {
     const { searchName, sections, currentSection, currentIndex } = this.state;
+    const user = getUserFromToken();
 
     return (
-      <div className="container list row">
-        <div className="col-md-8">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Name"
-              value={searchName}
-              onChange={this.onChangeSearchName}
-            />
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                onClick={this.searchName}
-              >
+      <Container>
+        <Row>
+          <Col md={"6"}>
+            <h4>Section List</h4>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder={"Search by Name"}
+                aria-label={"Search by Name"}
+                value={searchName}
+                onChange={this.onChangeSearchName}
+              />
+              <Button variant={"outline-secondary"} onClick={this.searchName}>
                 Search
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <h4>Section List</h4>
-          <Link
-            to={"/add-section/"}
-            title={"Add Section"}
-            aria-label={"Add Section"}
-            className={"btn btn-primary mb-2 mr-half"}
-          ><span className={"mr-half"}>Add Section</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                 className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-              <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-            </svg>
-          </Link>
-          <button
-            className="mr-half mb-2 btn btn-danger"
-            onClick={this.removeAllSections}
-          >
-            Remove All
-          </button>
-          <ul className="list-group">
-            <Loader
-              type={"MutatingDots"}
-              color={"Yellow"}
-              secondaryColor={"Red"}
-              visible={this.state.isLoading}
-            />
-            { sections && sections.map((section, index) => (
-              <li
-                className={
-                  "list-group-item " +
-                  (index === currentIndex ? "active" : "")
-                }
-                onClick={() => this.setActiveSection(section, index)}
-                key={index}
-              >
-                {section.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="col-md-6">
-          { currentSection ? (
-            <div>
-              <h4>Section Details</h4>
-              <div>
-                <label>
-                  <strong>Name:</strong>
-                </label>{" "}
-                { currentSection.name }
-              </div>
-              <div>
-                <label>
-                  <strong>Polling Station:</strong>
-                </label>{" "}
-                { currentSection.pollingStation.name }
-              </div>
-              <Link to={"/sections/" + currentSection._id} className="btn btn-success mr-half">
-                Edit
+              </Button>
+            </InputGroup>
+            {(user && user.role === 'Admin') &&
+            <>
+              <Link
+                to={"/add-section/"}
+                title={"Add Section"}
+                aria-label={"Add Section"}
+                className={"btn btn-primary mb-2 mr-half"}
+              ><span className={"mr-half"}>Add Section</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                </svg>
               </Link>
-              <button className="btn btn-danger mr-half" onClick={this.deleteSection}>
-                Delete
-              </button>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a section...</p>
-            </div>
-          )}
-        </div>
-      </div>
+              <Button variant={"danger"} className={"mb-2 mr-half"} onClick={this.removeAllSections}>
+                Remove All
+              </Button>
+            </>
+            }
+          </Col>
+        </Row>
+
+        <Row xs={1} md={2} lg={4} className={"g-4"}>
+          <Loader
+            type={"MutatingDots"}
+            color={"Yellow"}
+            secondaryColor={"Red"}
+            visible={this.state.isLoading}
+          />
+          { sections && sections.map((section, index) => (
+            <Col>
+              <Card>
+                <Card.Body>
+                  <Card.Text>
+                    <p><strong>Code:{" "}</strong>{ section.name }</p>
+                    <p><strong>Polling Station:{" "}</strong>{ section.pollingStation.name }</p>
+                  </Card.Text>
+                  { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
+                  <Link to={"/sections/" + section._id} className={"btn btn-success mr-half"}>
+                    Edit
+                  </Link>
+                  }
+                  { (user && user.role === 'Admin') &&
+                  <Button variant={"danger"} className={"mr-half"} onClick={() => this.deleteSection(section._id)}>
+                    Delete
+                  </Button>
+                  }
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
     );
   }
 }

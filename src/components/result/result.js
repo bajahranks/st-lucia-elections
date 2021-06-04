@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ResultDataService from "../../services/result";
 import { Link } from "react-router-dom";
 import MaterialTable from 'material-table';
+import {getUserFromToken} from "../../helpers/util";
 
 export default class Result extends Component {
   constructor(props) {
@@ -90,21 +91,24 @@ export default class Result extends Component {
 
   render() {
     const {results} = this.state;
+    const user = getUserFromToken();
 
     return (
       <section className={"ml-1 mr-1"}>
-        <Link
-          to={"/add-result/"}
-          title={"Add Result"}
-          aria-label={"Add Result"}
-          className={"btn btn-primary mb-2"}
-        ><span className={"mr-half"}>Add Result</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        {(user && (user.role === 'Admin' || user.role === 'Staff')) &&
+          <Link
+            to={"/add-result/"}
+            title={"Add Result"}
+            aria-label={"Add Result"}
+            className={"btn btn-primary mb-2"}
+          ><span className={"mr-half"}>Add Result</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path
                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg>
-        </Link>
+          </Link>
+        }
         <MaterialTable
           isLoading={this.state.isLoading}
           title={"St. Lucia Election Data"}
