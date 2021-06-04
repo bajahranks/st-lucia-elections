@@ -68,7 +68,7 @@ export default class Section extends Component {
   }
 
   render() {
-    const { searchName, sections, currentSection, currentIndex } = this.state;
+    const { searchName, sections } = this.state;
     const user = getUserFromToken();
 
     return (

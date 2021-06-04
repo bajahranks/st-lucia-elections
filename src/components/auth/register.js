@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AuthService from "../../services/auth";
 import { Redirect } from "react-router-dom";
+import {Alert, Button, Col, Form, Row} from "react-bootstrap";
 
 export default class Register extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ export default class Register extends Component {
       email: '',
       password: '',
       role: '',
-      redirect: false
+      redirect: false,
+      message: ''
     };
   }
 
@@ -45,6 +47,12 @@ export default class Register extends Component {
     });
   }
 
+  onChangeMessage = (errorMessage) => {
+    this.setState({
+      message: errorMessage
+    });
+  }
+
   registerUser(e) {
     // Prevent browser from refreshing
     e.preventDefault();
@@ -60,7 +68,7 @@ export default class Register extends Component {
       this.setState({
         redirect: true
       });
-    }).catch(e => { console.log(e) });
+    }).catch(error => { this.onChangeMessage(error.response.data) });
   }
 
   render(){
@@ -69,53 +77,64 @@ export default class Register extends Component {
       return <Redirect to={"/login"} />;
     }
     return (
-      <section className="text-center login">
-        <main className="form-signin">
-          <form onSubmit={this.registerUser}>
-            <h1 className="h3 mb-3 fw-normal">Please Register</h1>
-            <div className="form-floating">
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                placeholder="Enter your full name"
-                name="name"
-                onChange={this.onChangeName}
-              />
-              {/*<label htmlFor="floatingInput">Email address</label>*/}
-            </div>
-            <div className="form-floating">
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="name@example.com"
-                name="email"
-                onChange={this.onChangeEmail}
-              />
-              {/*<label htmlFor="floatingInput">Email address</label>*/}
-            </div>
-            <div className="form-floating">
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="Password"
-                name="password"
-                onChange={this.onChangePassword}
-              />
-              {/*<label htmlFor="floatingPassword">Password</label>*/}
-            </div>
-            <div>
-              <select className={"form-control"} id={"role"} name={"role"} onChange={this.onChangeRole}>
-                <option defaultValue={""}>Choose Role</option>
-                <option key={'Admin'} value={'Admin'}>Admin</option>
-                <option key={'Staff'} value={'Staff'}>Staff</option>
-                <option key={'Poll Worker'} value={'Poll Worker'}>Poll Worker</option>
-              </select>
-            </div>
-            <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-          </form>
+      <section className="login">
+        <main className="form-register">
+          <Form onSubmit={this.registerUser}>
+            <h1 className="h3 mb-3 text-center fw-normal">Please Register</h1>
+            { this.state.message ?
+              <Alert variant={"danger"}>
+                <h4>{this.state.message.error}</h4>
+              </Alert>
+              : ("")}
+            <Form.Group as={Row} className="mb-3" controlId={"name"}>
+              <Form.Label column sm="3">Full Name</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  placeholder="Enter your full name"
+                  name="name"
+                  value={this.state.name}
+                  onChange={this.onChangeName}
+                  required
+                />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId={"email"}>
+              <Form.Label column sm="3">Email</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  type={"email"}
+                  placeholder={"name@example.com"}
+                  name={"email"}
+                  value={this.state.email}
+                  onChange={this.onChangeEmail}
+                />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} controlId={"password"}>
+              <Form.Label column sm="3">Password</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.onChangePassword}
+                />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className={"mb-3"} controlId={"role"}>
+              <Form.Label column sm="3">Role</Form.Label>
+              <Col sm={"9"}>
+                <Form.Select name={"role"} onChange={this.onChangeRole}>
+                  <option defaultValue={""}>Choose Role</option>
+                  <option key={'Admin'} value={'Admin'}>Admin</option>
+                  <option key={'Staff'} value={'Staff'}>Staff</option>
+                  <option key={'Poll Worker'} value={'Poll Worker'}>Poll Worker</option>
+                </Form.Select>
+              </Col>
+            </Form.Group>
+            <Button variant={"primary"} className="w-100" type="submit">Register</Button>
+          </Form>
         </main>
       </section>
     )
