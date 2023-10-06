@@ -22,8 +22,10 @@ export default class Home extends Component {
     return Math.round((votes/votesCast) * 100)
   }
 
+  // @todo: Fix issue with this method
   resultsByYear(year) {
-    ResultDataService.findByYear(year)
+    ResultDataService.getAll()
+    //ResultDataService.findByYear(year)
       .then(response => {
         this.setState({
           results: response.data,

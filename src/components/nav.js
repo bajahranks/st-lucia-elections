@@ -41,9 +41,9 @@ const Navigation = () => {
           </Nav.Item>
           { !state.isAuthenticated && !getToken() ?
             <>
-              <Nav.Item className={"left-divider"}>
+              {/*<Nav.Item className={"left-divider"}>
                 <Link to={"/register"} className="nav-link">Register</Link>
-              </Nav.Item>
+              </Nav.Item>*/}
               <Nav.Item>
                 <Link to={"/login"} className="nav-link">Login</Link>
               </Nav.Item>
