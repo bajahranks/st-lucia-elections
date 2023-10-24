@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import DistrictDataService from "../../services/district";
-import Loader from "react-loader-spinner";
-import {getToken, getUserFromToken} from "../../helpers/util";
-import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
+import React, { Component } from 'react';
+import DistrictDataService from '../../services/district';
+import Loader from 'react-loader-spinner';
+import { getToken, getUserFromToken } from '../../helpers/util';
+import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 export default class EditDistrict extends Component{
   constructor(props) {
@@ -165,16 +165,16 @@ export default class EditDistrict extends Component{
                   </Form.Group>
                   {/* Buttons */}
                   { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
-                  <Button variant={"success"} className="mr-half" onClick={this.updateDistrict} >
+                  <Button variant={'success'} className={'mr-half'} onClick={this.updateDistrict}>
                     Edit
                   </Button>
                   }
                   { (user && user.role === 'Admin') &&
-                  <Button variant={"danger"} className="mr-half" onClick={() => this.deleteDistrict()}>
+                  <Button variant={'danger'} className={'mr-half'} onClick={() => this.deleteDistrict()}>
                     Delete
                   </Button>
                   }
-                  <a className={"btn btn-warning"} href={"/"}>Cancel</a>
+                  <a className={'btn btn-warning'} href={'/districts'}>Cancel</a>
                 </fieldset>
               </Card.Body>
             </Card>

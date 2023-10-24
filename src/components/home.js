@@ -71,7 +71,8 @@ export default class Home extends Component {
       switch (candidateNumber) {
         case 1: votes += result.candidate1Votes; break;
         case 2: votes += result.candidate2Votes; break;
-        default:
+        case 5: votes += result.candidate5Votes; break;
+        default: votes = 0;
       }
       votesCast += result.votesCast;
     })

@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import DistrictDataService from "../../services/district";
-import { Link } from "react-router-dom";
-import Loader from "react-loader-spinner";
-import {Accordion, Button, Col, Container, FormControl, InputGroup, Row} from "react-bootstrap";
-import {getToken, getUserFromToken} from "../../helpers/util";
+import React, { Component } from 'react';
+import DistrictDataService from '../../services/district';
+import Link from 'react-router-dom/Link';
+import Loader from 'react-loader-spinner';
+import { Accordion, Button, Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap';
+import { getToken, getUserFromToken } from '../../helpers/util';
 
 export default class District extends Component {
   constructor(props) {
@@ -99,10 +99,10 @@ export default class District extends Component {
                   aria-label={"Add District"}
                   className={"btn btn-primary mb-2 mr-half"}
                 ><span className={"mr-half"}>Add District</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  <svg xmlns={'http://www.w3.org/2000/svg'} width={'16'} height={'16'} fill={'currentColor'}
                        className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
                     <path
-                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                      d={'M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z'}/>
                   </svg>
                 </Link>
                 <Button variant={"danger"} className={"mb-2"} onClick={this.removeAllDistricts}>
@@ -127,7 +127,7 @@ export default class District extends Component {
                     <p><strong>Code:</strong>{" "} {district.code}</p>
                     <p><strong>Description:</strong>{" "} {district.description}</p>
                     { (user && (user.role === 'Admin' || user.role === 'Staff')) &&
-                      <Link to={"/districts/" + district._id} className="btn btn-success mr-half">
+                      <Link to={"/districts/" + district._id} className={'btn btn-success mr-half'}>
                         Edit
                       </Link>
                     }

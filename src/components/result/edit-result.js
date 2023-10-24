@@ -5,6 +5,7 @@ import PollingStationDataService from "../../services/polling-station";
 import SectionDataService from "../../services/section";
 import CandidateDataService from "../../services/candidate";
 import Loader from "react-loader-spinner";
+import { getToken } from '../../helpers/util';
 
 export default class EditResult extends Component{
   constructor(props) {
@@ -426,16 +427,16 @@ export default class EditResult extends Component{
   updateResult() {
     const currentResult = this.state.currentResult;
 
-    ResultDataService.update(this.state.currentResult._id, currentResult)
+    ResultDataService.update(this.state.currentResult._id, currentResult, getToken())
       .then(() => {
         this.setState({
           message: "The result was updated successfully!"
         });
-      }).catch(error => { console.log(error); });
+      }).catch(error => { console.log(error + ' failed to update result') });
   }
 
   deleteResult() {
-    ResultDataService.delete(this.state.currentResult._id)
+    ResultDataService.delete(this.state.currentResult._id, getToken())
       .then(() => {
         this.props.history.push('/results')
       }).catch(error => { console.log(error); });
@@ -867,7 +868,7 @@ export default class EditResult extends Component{
                 <button className="btn btn-danger mr-half" onClick={this.deleteResult}>
                   Delete
                 </button>
-                <a className={"btn btn-warning"} href={"/"}>Cancel</a>
+                <a className={"btn btn-warning"} href={"/results"}>Cancel</a>
               </div>
             </div>
           </fieldset>
