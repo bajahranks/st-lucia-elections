@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-import {getToken, removeUserSession} from "../helpers/util";
+import { Link } from 'react-router-dom';
+import { getToken, removeUserSession } from '../helpers/util';
 import { store } from '../store/store';
-import { useHistory } from "react-router";
+import { useHistory } from 'react-router';
 
 const Navigation = () => {
   const { state, dispatch } = useContext(store);
@@ -16,28 +16,28 @@ const Navigation = () => {
   }
 
   return (
-    <Navbar expand={"lg"} className={"nav-bg"}>
-      <Navbar.Brand><Link to={"/"}>St. Lucia Elections</Link></Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" className={"justify-content-end"}>
+    <Navbar expand={'lg'} className={'nav-bg'}>
+      <Navbar.Brand><Link to={'/'}>St. Lucia Elections</Link></Navbar.Brand>
+      <Navbar.Toggle aria-controls={'basic-navbar-nav'} />
+      <Navbar.Collapse id={'basic-navbar-nav'} className={'justify-content-end'}>
         <Nav>
           <Nav.Item>
-            <Link to={"/results"} className="nav-link">Results</Link>
+            <Link to={'/results'} className={'nav-link'}>Results</Link>
           </Nav.Item>
           <Nav.Item>
-            <Link to={"/parties"} className="nav-link">Parties</Link>
+            <Link to={'/parties'} className={'nav-link'}>Parties</Link>
           </Nav.Item>
           <Nav.Item>
-            <Link to={"/candidates"} className="nav-link">Candidates</Link>
+            <Link to={'/candidates'} className={'nav-link'}>Candidates</Link>
           </Nav.Item>
           <Nav.Item>
-            <Link to={"/districts"} className="nav-link">Districts</Link>
+            <Link to={'/districts'} className={'nav-link'}>Districts</Link>
           </Nav.Item>
           <Nav.Item>
-            <Link to={"/polling-stations"} className="nav-link">Polling Stations</Link>
+            <Link to={'/polling-stations'} className={'nav-link'}>Polling Stations</Link>
           </Nav.Item>
           <Nav.Item>
-            <Link to={"/sections"} className="nav-link">Sections</Link>
+            <Link to={'/sections'} className={'nav-link'}>Sections</Link>
           </Nav.Item>
           { !state.isAuthenticated && !getToken() ?
             <>
@@ -45,13 +45,13 @@ const Navigation = () => {
                 <Link to={"/register"} className="nav-link">Register</Link>
               </Nav.Item>*/}
               <Nav.Item>
-                <Link to={"/login"} className="nav-link">Login</Link>
+                <Link to={'/login'} className={'nav-link'}>Login</Link>
               </Nav.Item>
             </> : null
           }
           { state.isAuthenticated || getToken() ?
-            <li className="nav-item left-divider">
-              <input type="button" className={"logout"} onClick={logoutUser} value="Log Out" />
+            <li className={'nav-item left-divider'}>
+              <input type={'button'} className={'logout'} onClick={logoutUser} value={'Log Out'} />
             </li>
             : null
           }
